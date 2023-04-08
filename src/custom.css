@@ -1,0 +1,7 @@
+.recording-indicator {
+  @apply absolute top-2 left-2 w-6 h-6 border border-gray-500 rounded-full;
+}
+
+.recording-indicator.active {
+  @apply bg-red-500 animate-pulse;
+}

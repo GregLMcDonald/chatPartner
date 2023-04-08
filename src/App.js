@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './custom.css';
 import AudioRecorder from './AudioRecorder';
 import AudioPlayer from './AudioPlayer';
 
