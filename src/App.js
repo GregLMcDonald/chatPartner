@@ -8,7 +8,7 @@ function App() {
 
   const handleAudioSubmit = async (recordedAudioURL) => {
     // Replace this URL with the endpoint of your serverless function
-    const serverlessFunctionURL = 'https://your-serverless-function-url';
+    // const serverlessFunctionURL = 'https://your-serverless-function-url';
 
     // Fetch the audio Blob from the recorded audio URL
     const audioBlob = await fetch(recordedAudioURL).then((response) => response.blob());

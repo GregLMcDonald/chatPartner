@@ -6,6 +6,7 @@ const AudioRecorder = ({ onSubmit }) => {
   const [transcript, setTranscript] = useState('');
   const [conversation, setConversation] = useState([]);
 
+  const transcriptRef = useRef(transcript);
   const recognitionRef = useRef(null);
 
   useEffect(() => {
@@ -15,6 +16,19 @@ const AudioRecorder = ({ onSubmit }) => {
       stopSpeechRecognition();
     }
   }, [isRecording]);
+
+  useEffect(() => {
+    transcriptRef.current = transcript;
+  }, [transcript]);
+
+  // const getTime = () => {
+  //   const date = new Date();
+  //   const hours = date.getHours();
+  //   const minutes = date.getMinutes();
+  //   const seconds = date.getSeconds();
+  //   const milliseconds = date.getMilliseconds();
+  //   return `${hours}:${minutes}:${seconds}.${milliseconds}`;
+  // };
 
 
   const addPunctuation = (text) => {
@@ -35,6 +49,22 @@ const AudioRecorder = ({ onSubmit }) => {
     return processedWords.join(' ');
   };
 
+  const textToSpeech = (text, lang = 'en-US', voiceName = '') => {
+    if ('speechSynthesis' in window) {
+      const synth = window.speechSynthesis;
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = lang;
+
+      // Find the voice by name if provided, otherwise use the default voice for the language
+      const voices = synth.getVoices();
+      const voice = voices.find((v) => v.lang === lang && (voiceName ? v.name === voiceName : true));
+      utterance.voice = voice || voices.find((v) => v.lang === lang);
+
+      synth.speak(utterance);
+    } else {
+      alert('Sorry, speech synthesis is not supported by your browser.');
+    }
+  };
 
   const startSpeechRecognition = () => {
     if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
@@ -64,6 +94,14 @@ const AudioRecorder = ({ onSubmit }) => {
         });
       };
 
+      recognitionRef.current.onend = () => {
+        console.log('Speech recognition ended.', transcriptRef.current);
+        textToSpeech(transcriptRef.current, 'de-DE', 'Google Deutsch');
+        setConversation((prevConversation) => {
+          return [...prevConversation, { type: 'bot', text: transcriptRef.current }];
+        });
+      };
+
       recognitionRef.current.start();
     } else {
       alert('Speech Recognition API is not supported by your browser.');
@@ -72,6 +110,7 @@ const AudioRecorder = ({ onSubmit }) => {
 
   const stopSpeechRecognition = () => {
     if (recognitionRef.current) {
+      console.log('Stopping speech recognition...');
       recognitionRef.current.stop();
       recognitionRef.current = null;
     }
@@ -98,7 +137,7 @@ const AudioRecorder = ({ onSubmit }) => {
           disabled={isRecording}
           className="px-4 py-2 text-lg font-semibold rounded-lg shadow-md text-white bg-blue-500 hover:bg-opacity-90 focus:outline-none mr-2"
         >
-          Start Recording
+          Aufnahme starten
         </button>
 
         {isRecording && <div className="recording-indicator active"></div>}
@@ -109,19 +148,19 @@ const AudioRecorder = ({ onSubmit }) => {
           disabled={!isRecording}
           className="px-4 py-2 text-lg font-semibold rounded-lg shadow-md text-white bg-red-500 hover:bg-opacity-90 focus:outline-none"
         >
-          Stop Recording
+          Aufnahme stoppen
         </button>
       </div>
 
       {/* Display the transcript */}
       <div className="mb-4">
         <div className="flex justify-between items-center">
-          <p className="font-semibold">Conversation:</p>
+          <p className="font-semibold">Gespräch:</p>
           <button
             onClick={clearConversation}
             className="text-sm font-semibold text-red-600 hover:text-red-800 focus:outline-none"
           >
-            Clear Conversation
+            Gespräch löschen
           </button>
         </div>
         <Conversation conversation={conversation} />
@@ -131,3 +170,15 @@ const AudioRecorder = ({ onSubmit }) => {
 };
 
 export default AudioRecorder;
+
+
+// Anna de-DE
+// VM1479:1 Eddy (German (Germany)) de-DE
+// VM1479:1 Flo (German (Germany)) de-DE
+// VM1479:1 Grandma (German (Germany)) de-DE
+// VM1479:1 Grandpa (German (Germany)) de-DE
+// VM1479:1 Reed (German (Germany)) de-DE
+// VM1479:1 Rocko (German (Germany)) de-DE
+// VM1479:1 Sandy (German (Germany)) de-DE
+// VM1479:1 Shelley (German (Germany)) de-DE
+// VM1479:1 Google Deutsch de-DE
