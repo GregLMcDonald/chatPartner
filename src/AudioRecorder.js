@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import Conversation from './Conversation';
 import axios from 'axios';
 
-const AudioRecorder = ({ onSubmit }) => {
+const AudioRecorder = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [transcript, setTranscript] = useState('');
   const [conversation, setConversation] = useState([]);
@@ -61,9 +61,9 @@ const AudioRecorder = ({ onSubmit }) => {
 const callGPTAPI = async (text) => {
   try {
     const response = await axios.post('http://localhost:3001/api/gpt', { text });
-    return response.data.text;
+    return { type: 'bot', text: response.data.text }
   } catch (error) {
-    return 'schlecht!'
+    return { type: 'error', text: 'Oops. Das hat nicht funktioniert.' }
   }
 };
 
@@ -98,9 +98,10 @@ const callGPTAPI = async (text) => {
 
       recognitionRef.current.onend = () => {
         callGPTAPI(transcriptRef.current).then((response) => {
-          textToSpeech(response, 'de-DE', 'Google Deutsch');
+          const { text } = response;
+          textToSpeech(text, 'de-DE', 'Google Deutsch');
           setConversation((prevConversation) => {
-            return [...prevConversation, { type: 'bot', text: response }];
+            return [...prevConversation, response];
           });
         });
       };

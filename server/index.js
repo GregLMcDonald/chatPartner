@@ -25,6 +25,7 @@ app.post('/api/gpt', async (req, res) => {
     const openai = new OpenAIApi(configuration);
     const response = await openai.createCompletion({
       model: 'text-davinci-003',
+      // model: 'gpt-3.5-turbo',
     //  prompt: `Reply to this in German: ${text}. End with a prompt to continue the conversation.`,
       prompt: `Reply to this statement in a conversation in German: ${text}. Your reply should be a complete sentence and end with a prompt to continue the conversation.`,
       max_tokens: 50,
