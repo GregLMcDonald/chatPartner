@@ -1,7 +1,11 @@
 import React from "react";
 
-const LanguageSelectorTitle = ({ options, language, onChange }) => (
-   <h1 className="text-4xl font-bold mb-4">
+const LanguageSelectorTitle = ({
+  options = [],
+  language,
+  onChange = () => {}
+}) => (
+  <h1 className="text-4xl font-bold mb-4">
     Let's chat in{' '}
     <select
       value={language}

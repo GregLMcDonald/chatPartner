@@ -3,7 +3,7 @@ import Conversation from './Conversation';
 import axios from 'axios';
 import { RecordButton, StopButton } from './Buttons';
 import RecordingIndicator from './RecordingIndicator';
-import textToSpeech from './services/textToSpeech';
+import textToSpeech from '../services/textToSpeech';
 
 const AudioRecorder = ({ language, voiceName }) => {
   const [isRecording, setIsRecording] = useState(false);

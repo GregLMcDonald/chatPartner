@@ -1,14 +1,14 @@
 import React, { useEffect, useState} from 'react';
 import './custom.css';
-import AudioRecorder from './AudioRecorder';
-import LanguageSelectorTitle from './LanguageSelectorTitle';
-import VoiceSelectorHeading from './VoiceSelectorHeading';
+import AudioRecorder from './components/AudioRecorder';
+import LanguageSelectorTitle from './components/LanguageSelectorTitle';
+import VoiceSelectorHeading from './components/VoiceSelectorHeading';
 
 const LANGUAGE_OPTIONS = [
-  { label: 'German!', value: 'de-DE' },
-  { label: 'French!', value: 'fr-FR' },
-  { label: 'English!', value: 'en-US' },
-  { label: 'Japanese!', value: 'ja-JP' },
+  { label: 'German ', value: 'de-DE' },
+  { label: 'French ', value: 'fr-FR' },
+  { label: 'English ', value: 'en-US' },
+  { label: 'Japanese ', value: 'ja-JP' },
 ];
 
 const getGoogleVoice = (voices) => {

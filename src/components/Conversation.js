@@ -20,7 +20,7 @@ const Conversation = ({ conversation, clearConversation }) => {
           Clear conversation
         </button>
       </div>
-      <div className="bg-white p-4 rounded-lg shadow-md overflow-auto" style={{ maxWidth: '500px', minWidth: '500px', minHeight: '500px', maxHeight: '500px' }}>
+      <div className="bg-white p-4 mt-2 rounded-lg shadow-md overflow-auto" style={{ maxWidth: '500px', minWidth: '500px', minHeight: '500px', maxHeight: '500px' }}>
         {conversation.map((msg, idx) => {
           return (
             <div
