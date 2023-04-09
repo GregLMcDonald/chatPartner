@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Conversation from './Conversation';
 import axios from 'axios';
+import { RecordButton, StopButton } from './Buttons';
 
 const AudioRecorder = () => {
   const [isRecording, setIsRecording] = useState(false);
@@ -99,7 +100,9 @@ const callGPTAPI = async (text) => {
       recognitionRef.current.onend = () => {
         callGPTAPI(transcriptRef.current).then((response) => {
           const { text } = response;
-          textToSpeech(text, 'de-DE', 'Google Deutsch');
+          if (response.type !== 'error') {
+            textToSpeech(text, 'de-DE', 'Google Deutsch');
+          }
           setConversation((prevConversation) => {
             return [...prevConversation, response];
           });
@@ -135,39 +138,14 @@ const callGPTAPI = async (text) => {
   return (
     <div className="mb-8">
       <div className="mb-4 flex flex-row items-center justify-center">
-        <button
-          onClick={startRecording}
-          disabled={isRecording}
-          className="px-4 py-2 text-lg font-semibold rounded-lg shadow-md text-white bg-blue-500 hover:bg-opacity-90 focus:outline-none mr-2"
-        >
-          Aufnahme starten
-        </button>
+        <RecordButton isRecording={isRecording} startRecording={startRecording} />
 
         {isRecording && <div className="recording-indicator active"></div>}
         {!isRecording && <div className="recording-indicator"></div>}
 
-        <button
-          onClick={stopRecording}
-          disabled={!isRecording}
-          className="px-4 py-2 text-lg font-semibold rounded-lg shadow-md text-white bg-red-500 hover:bg-opacity-90 focus:outline-none"
-        >
-          Aufnahme stoppen
-        </button>
+        <StopButton isRecording={isRecording} stopRecording={stopRecording} />
       </div>
-
-      {/* Display the transcript */}
-      <div className="mb-4">
-        <div className="flex justify-between items-center">
-          <p className="font-semibold">Gespräch:</p>
-          <button
-            onClick={clearConversation}
-            className="text-sm font-semibold text-red-600 hover:text-red-800 focus:outline-none"
-          >
-            Gespräch löschen
-          </button>
-        </div>
-        <Conversation conversation={conversation} />
-      </div>
+      <Conversation conversation={conversation} clearConversation={clearConversation}/>
     </div>
   );
 };
