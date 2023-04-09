@@ -11,9 +11,9 @@ function App() {
     // const serverlessFunctionURL = 'https://your-serverless-function-url';
 
     // Fetch the audio Blob from the recorded audio URL
-    const audioBlob = await fetch(recordedAudioURL).then((response) => response.blob());
+    //const audioBlob = await fetch(recordedAudioURL).then((response) => response.blob());
 
-    console.log(audioBlob);
+    // console.log(audioBlob);
     // // Create a FormData object and append the audio Blob as a file
     // const formData = new FormData();
     // formData.append('audio', audioBlob, 'audio.webm');

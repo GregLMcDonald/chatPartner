@@ -97,8 +97,6 @@ const callGPTAPI = async (text) => {
       };
 
       recognitionRef.current.onend = () => {
-        console.log('Speech recognition ended.', transcriptRef.current);
-
         callGPTAPI(transcriptRef.current).then((response) => {
           textToSpeech(response, 'de-DE', 'Google Deutsch');
           setConversation((prevConversation) => {
@@ -115,7 +113,6 @@ const callGPTAPI = async (text) => {
 
   const stopSpeechRecognition = () => {
     if (recognitionRef.current) {
-      console.log('Stopping speech recognition...');
       recognitionRef.current.stop();
       recognitionRef.current = null;
     }

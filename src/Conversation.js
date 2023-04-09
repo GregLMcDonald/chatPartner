@@ -1,6 +1,14 @@
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 
 const Conversation = ({ conversation }) => {
+  const conversationEndRef = useRef(null);
+
+  useEffect(() => {
+    if (conversationEndRef.current) {
+      conversationEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [conversation]);
+
   return (
     <div className="bg-white p-4 rounded-lg shadow-md overflow-auto" style={{ maxWidth: '500px', minWidth: '500px', minHeight: '500px', maxHeight: '500px' }}>
       {conversation.map((msg, idx) => {
@@ -12,6 +20,7 @@ const Conversation = ({ conversation }) => {
           </div>
         );
       })}
+      <div ref={conversationEndRef} />
     </div>
   );
 };
