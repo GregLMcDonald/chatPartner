@@ -15,7 +15,6 @@ const config = {
 
 app.post('/api/gpt', async (req, res) => {
   const { messages, language } = req.body;
-  console.log(messages.length);
   try {
     axios.post('https://api.openai.com/v1/chat/completions', {
       model: 'gpt-3.5-turbo',
@@ -25,7 +24,6 @@ app.post('/api/gpt', async (req, res) => {
       ],
     }, config)
     .then(response => {
-      console.log(response.data);
       res.json(response.data.choices[0].message);
     })
     .catch(error => {

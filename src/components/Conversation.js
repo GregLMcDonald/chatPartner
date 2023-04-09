@@ -11,7 +11,6 @@ const Conversation = ({ conversation, clearConversation, historyCutoff }) => {
 
   const renderDottedLine = () => (
     <div
-      key='dotted-line'
       className="w-full h-2 mt-2 relative"
       style={{ borderTop: '1px dotted gray' }}
     >
@@ -30,8 +29,8 @@ const Conversation = ({ conversation, clearConversation, historyCutoff }) => {
     }
   }
 
-  const hardDimensionsStyleWidth = { maxWidth: '500px', minWidth: '500px'};
-  const hardDimensionsStyleHeight = { minHeight: '500px', maxHeight: '500px' };
+  const hardDimensionsStyleWidth = { maxWidth: '35rem', minWidth: '35rem'};
+  const hardDimensionsStyleHeight = { minHeight: '40rem', maxHeight: '40rem' };
 
   return (
     <div className="mb-4">
@@ -47,9 +46,8 @@ const Conversation = ({ conversation, clearConversation, historyCutoff }) => {
       <div className="bg-white p-4 mt-2 rounded-lg shadow-md overflow-auto" style={{...hardDimensionsStyleWidth, ...hardDimensionsStyleHeight}}>
         {conversation.map((msg, idx) => {
           return (
-            <>
+            <div key={idx}>
               <div
-                key={idx}
                 className={`${
                   msg.type === 'utterance' && msg.role === 'user'
                     ? 'bg-green-100 text-green-900'
@@ -63,7 +61,7 @@ const Conversation = ({ conversation, clearConversation, historyCutoff }) => {
                 <span className="block whitespace-pre-wrap">{msg.content}</span>
               </div>
               {(idx === (conversation.length - historyCutoff) - 1) && renderDottedLine()}
-            </>
+            </div>
           );
         })}
         <div ref={conversationEndRef} />
