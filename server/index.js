@@ -2,6 +2,9 @@ const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
 
+require('dotenv').config();
+const openaiKey = process.env.OPENAI_KEY;
+
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -9,7 +12,7 @@ app.use(cors());
 const config = {
   headers: {
     'Content-Type': 'application/json',
-    'Authorization': `Bearer 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`,
+    'Authorization': `Bearer ${openaiKey}`,
   },
 };
 
