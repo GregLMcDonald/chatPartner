@@ -1,40 +1,37 @@
 const express = require('express');
-const { Configuration, OpenAIApi } = require('openai');
 const cors = require('cors');
+const axios = require('axios');
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
-
-// const configuration = new Configuration({
-//       apiKey: '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',
-//     });
-// const openai = new OpenAIApi(configuration);
-// openai.listModels().then((response) => {
-//   console.log(response.data);
-// });
-
+const config = {
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer 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`,
+  },
+};
 
 app.post('/api/gpt', async (req, res) => {
-  const { text, language } = req.body;
+  const { messages, language } = req.body;
+  console.log(messages.length);
   try {
-    const configuration = new Configuration({
-      apiKey: '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',
+    axios.post('https://api.openai.com/v1/chat/completions', {
+      model: 'gpt-3.5-turbo',
+      messages: [
+        {role: "system", content: `You are a ${language} conversation partner. Keep your response very short and to the point but alway finish with a prompt to further the conversation. Use at most twice the number of words as the user's last message.`},
+        ...messages,
+      ],
+    }, config)
+    .then(response => {
+      console.log(response.data);
+      res.json(response.data.choices[0].message);
+    })
+    .catch(error => {
+      console.error('Error calling GPT API:', error);
+      res.status(500).json({ error: 'Error calling GPT API' });
     });
-    const openai = new OpenAIApi(configuration);
-    const response = await openai.createCompletion({
-      model: 'text-davinci-003',
-      // model: 'gpt-3.5-turbo',
-    //  prompt: `Reply to this in German: ${text}. End with a prompt to continue the conversation.`,
-      prompt: `Reply to this statement in a conversation in ${language}: ${text}. Your reply should be a complete sentence and end with a prompt to continue the conversation.`,
-      max_tokens: 50,
-      temperature: 0.2,
-    });
-
-    console.log(response.data);
-
-    res.json({ text: response.data.choices[0].text?.replace(/^[\n]+/, '') });
   } catch (error) {
     console.error('Error calling GPT API:', error);
     res.status(500).json({ error: 'Error calling GPT API' });
