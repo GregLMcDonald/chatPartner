@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Conversation from './Conversation';
+import axios from 'axios';
 
 const AudioRecorder = ({ onSubmit }) => {
   const [isRecording, setIsRecording] = useState(false);
@@ -21,16 +22,6 @@ const AudioRecorder = ({ onSubmit }) => {
     transcriptRef.current = transcript;
   }, [transcript]);
 
-  // const getTime = () => {
-  //   const date = new Date();
-  //   const hours = date.getHours();
-  //   const minutes = date.getMinutes();
-  //   const seconds = date.getSeconds();
-  //   const milliseconds = date.getMilliseconds();
-  //   return `${hours}:${minutes}:${seconds}.${milliseconds}`;
-  // };
-
-
   const addPunctuation = (text) => {
     const punctuationMap = {
       'Punkt': '.',
@@ -50,6 +41,7 @@ const AudioRecorder = ({ onSubmit }) => {
   };
 
   const textToSpeech = (text, lang = 'en-US', voiceName = '') => {
+    console.log('textToSpeech', text, lang, voiceName);
     if ('speechSynthesis' in window) {
       const synth = window.speechSynthesis;
       const utterance = new SpeechSynthesisUtterance(text);
@@ -65,6 +57,15 @@ const AudioRecorder = ({ onSubmit }) => {
       alert('Sorry, speech synthesis is not supported by your browser.');
     }
   };
+
+const callGPTAPI = async (text) => {
+  try {
+    const response = await axios.post('http://localhost:3001/api/gpt', { text });
+    return response.data.text;
+  } catch (error) {
+    return 'schlecht!'
+  }
+};
 
   const startSpeechRecognition = () => {
     if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
@@ -82,7 +83,8 @@ const AudioRecorder = ({ onSubmit }) => {
 
         const punctuatedTranscript = addPunctuation(currentTranscript);
         setTranscript(punctuatedTranscript);
-        // Update the last conversation message with the current transcript
+        // Update the last conversation message with the current transcript.
+        // This is what makes the transcript appear to be continuously updated.
         setConversation((prevConversation) => {
           const lastMessage = prevConversation[prevConversation.length - 1];
           if (lastMessage && lastMessage.type === 'user') {
@@ -96,9 +98,12 @@ const AudioRecorder = ({ onSubmit }) => {
 
       recognitionRef.current.onend = () => {
         console.log('Speech recognition ended.', transcriptRef.current);
-        textToSpeech(transcriptRef.current, 'de-DE', 'Google Deutsch');
-        setConversation((prevConversation) => {
-          return [...prevConversation, { type: 'bot', text: transcriptRef.current }];
+
+        callGPTAPI(transcriptRef.current).then((response) => {
+          textToSpeech(response, 'de-DE', 'Google Deutsch');
+          setConversation((prevConversation) => {
+            return [...prevConversation, { type: 'bot', text: response }];
+          });
         });
       };
 
@@ -172,13 +177,4 @@ const AudioRecorder = ({ onSubmit }) => {
 export default AudioRecorder;
 
 
-// Anna de-DE
-// VM1479:1 Eddy (German (Germany)) de-DE
-// VM1479:1 Flo (German (Germany)) de-DE
-// VM1479:1 Grandma (German (Germany)) de-DE
-// VM1479:1 Grandpa (German (Germany)) de-DE
-// VM1479:1 Reed (German (Germany)) de-DE
-// VM1479:1 Rocko (German (Germany)) de-DE
-// VM1479:1 Sandy (German (Germany)) de-DE
-// VM1479:1 Shelley (German (Germany)) de-DE
-// VM1479:1 Google Deutsch de-DE
+
