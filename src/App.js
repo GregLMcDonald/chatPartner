@@ -22,10 +22,8 @@ function App() {
   const [voiceName, setVoiceName] = useState('');
 
   const handleLanguageChange = (event) => {
-    console.log(event.target.value);
     setLanguage(event.target.value);
     const googleVoiceName = getGoogleVoice(availableVoices[event.target.value]);
-    console.log(googleVoiceName);
     if (googleVoiceName) {
       setVoiceName(googleVoiceName);
     }

@@ -5,12 +5,13 @@ import { RecordButton, StopButton } from './Buttons';
 import RecordingIndicator from './RecordingIndicator';
 import textToSpeech from '../services/textToSpeech';
 
-const AudioRecorder = ({ language, voiceName }) => {
+const DEFAULT_CUTOFF = 6;
+
+const AudioRecorder = ({ language, voiceName, historyCutoff = DEFAULT_CUTOFF }) => {
   const [isRecording, setIsRecording] = useState(false);
-  const [transcript, setTranscript] = useState('');
   const [conversation, setConversation] = useState([]);
 
-  const transcriptRef = useRef(transcript);
+  const conversationRef = useRef(conversation);
   const recognitionRef = useRef(null);
 
   useEffect(() => {
@@ -22,31 +23,16 @@ const AudioRecorder = ({ language, voiceName }) => {
   }, [isRecording]);
 
   useEffect(() => {
-    transcriptRef.current = transcript;
-  }, [transcript]);
+    conversationRef.current = conversation;
+  }, [conversation]);
 
-  const addPunctuation = (text) => {
-    const punctuationMap = {
-      'Punkt': '.',
-      'Komma': ',',
-      'Ausrufezeichen': '!',
-      'Fragezeichen': '?',
-      'Semikolon': ';',
-      'Doppelpunkt': ':',
-    };
-
-    const words = text.split(' ');
-    const processedWords = words.map((word) => {
-      return punctuationMap[word] || word;
-    });
-
-    return processedWords.join(' ');
-  };
-
-  const callGPTAPI = async (text) => {
+  const callGPTAPI = async (messages) => {
+    const cleanedMessages = messages.filter((message) => message.type === 'utterance').map(({ role, content}) => ({ role, content}));
+    const cutoffMessages = cleanedMessages.slice(Math.max(cleanedMessages.length - historyCutoff, 0));
     try {
-      const response = await axios.post('http://localhost:3001/api/gpt', { text, language });
-      return { type: 'bot', text: response.data.text, language }
+      const response = await axios.post('http://localhost:3001/api/gpt', { messages: cutoffMessages, language });
+      const { role, content } = response.data;
+      return { type: 'utterance', role, content, language }
     } catch (error) {
       return { type: 'error', text: 'Oops.', language }
     }
@@ -66,26 +52,24 @@ const AudioRecorder = ({ language, voiceName }) => {
           currentTranscript += event.results[i][0].transcript;
         }
 
-        const punctuatedTranscript = addPunctuation(currentTranscript);
-        setTranscript(punctuatedTranscript);
         // Update the last conversation message with the current transcript.
         // This is what makes the transcript appear to be continuously updated.
         setConversation((prevConversation) => {
           const lastMessage = prevConversation[prevConversation.length - 1];
-          if (lastMessage && lastMessage.type === 'user') {
-            lastMessage.text = punctuatedTranscript;
+          if (lastMessage && lastMessage.type === 'utterance' && lastMessage.role === 'user') {
+            lastMessage.content = currentTranscript;
             return [...prevConversation.slice(0, -1), lastMessage];
           } else {
-            return [...prevConversation, { type: 'user', text: punctuatedTranscript }];
+            return [...prevConversation, { type: 'utterance', role: 'user', content: currentTranscript }];
           }
         });
       };
 
       recognitionRef.current.onend = () => {
-        callGPTAPI(transcriptRef.current).then((response) => {
-          const { text } = response;
-          if (response.type !== 'error') {
-            textToSpeech(text, language, voiceName);
+        callGPTAPI(conversationRef.current).then((response) => {
+          const { type, content } = response;
+          if (type !== 'error') {
+            textToSpeech(content, language, voiceName);
           }
           setConversation((prevConversation) => {
             return [...prevConversation, response];
@@ -125,7 +109,7 @@ const AudioRecorder = ({ language, voiceName }) => {
         <RecordButton isRecording={isRecording} startRecording={startRecording} />
         <StopButton isRecording={isRecording} stopRecording={stopRecording} />
       </div>
-      <Conversation conversation={conversation} clearConversation={clearConversation}/>
+      <Conversation conversation={conversation} clearConversation={clearConversation} historyCutoff={historyCutoff} />
     </div>
   );
 };
