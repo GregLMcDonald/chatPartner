@@ -2,8 +2,10 @@ import React, { useState, useRef, useEffect } from 'react';
 import Conversation from './Conversation';
 import axios from 'axios';
 import { RecordButton, StopButton } from './Buttons';
+import RecordingIndicator from './RecordingIndicator';
+import textToSpeech from './services/textToSpeech';
 
-const AudioRecorder = () => {
+const AudioRecorder = ({ language, voiceName }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [transcript, setTranscript] = useState('');
   const [conversation, setConversation] = useState([]);
@@ -41,32 +43,14 @@ const AudioRecorder = () => {
     return processedWords.join(' ');
   };
 
-  const textToSpeech = (text, lang = 'en-US', voiceName = '') => {
-    console.log('textToSpeech', text, lang, voiceName);
-    if ('speechSynthesis' in window) {
-      const synth = window.speechSynthesis;
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = lang;
-
-      // Find the voice by name if provided, otherwise use the default voice for the language
-      const voices = synth.getVoices();
-      const voice = voices.find((v) => v.lang === lang && (voiceName ? v.name === voiceName : true));
-      utterance.voice = voice || voices.find((v) => v.lang === lang);
-
-      synth.speak(utterance);
-    } else {
-      alert('Sorry, speech synthesis is not supported by your browser.');
+  const callGPTAPI = async (text) => {
+    try {
+      const response = await axios.post('http://localhost:3001/api/gpt', { text, language });
+      return { type: 'bot', text: response.data.text, language }
+    } catch (error) {
+      return { type: 'error', text: 'Oops.', language }
     }
   };
-
-const callGPTAPI = async (text) => {
-  try {
-    const response = await axios.post('http://localhost:3001/api/gpt', { text });
-    return { type: 'bot', text: response.data.text }
-  } catch (error) {
-    return { type: 'error', text: 'Oops. Das hat nicht funktioniert.' }
-  }
-};
 
   const startSpeechRecognition = () => {
     if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
@@ -74,7 +58,7 @@ const callGPTAPI = async (text) => {
       recognitionRef.current = new SpeechRecognition();
       recognitionRef.current.continuous = true;
       recognitionRef.current.interimResults = true;
-      recognitionRef.current.lang = 'de-DE';
+      recognitionRef.current.lang = language;
 
       recognitionRef.current.onresult = (event) => {
         let currentTranscript = '';
@@ -101,7 +85,7 @@ const callGPTAPI = async (text) => {
         callGPTAPI(transcriptRef.current).then((response) => {
           const { text } = response;
           if (response.type !== 'error') {
-            textToSpeech(text, 'de-DE', 'Google Deutsch');
+            textToSpeech(text, language, voiceName);
           }
           setConversation((prevConversation) => {
             return [...prevConversation, response];
@@ -134,15 +118,11 @@ const callGPTAPI = async (text) => {
     setConversation([]);
   };
 
-
   return (
     <div className="mb-8">
+      <RecordingIndicator isRecording={isRecording} />
       <div className="mb-4 flex flex-row items-center justify-center">
         <RecordButton isRecording={isRecording} startRecording={startRecording} />
-
-        {isRecording && <div className="recording-indicator active"></div>}
-        {!isRecording && <div className="recording-indicator"></div>}
-
         <StopButton isRecording={isRecording} stopRecording={stopRecording} />
       </div>
       <Conversation conversation={conversation} clearConversation={clearConversation}/>

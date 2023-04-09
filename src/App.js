@@ -1,30 +1,66 @@
-import React from 'react';
+import React, { useEffect, useState} from 'react';
 import './custom.css';
 import AudioRecorder from './AudioRecorder';
+import LanguageSelectorTitle from './LanguageSelectorTitle';
+import VoiceSelectorHeading from './VoiceSelectorHeading';
+
+const LANGUAGE_OPTIONS = [
+  { label: 'German!', value: 'de-DE' },
+  { label: 'French!', value: 'fr-FR' },
+  { label: 'English!', value: 'en-US' },
+  { label: 'Japanese!', value: 'ja-JP' },
+];
+
+const getGoogleVoice = (voices) => {
+  return (voices || []).find((voice) => voice.includes('Google'));
+};
+
 
 function App() {
-  const [language, setLanguage] = React.useState('German');
+  const [language, setLanguage] = useState('de-DE');
+  const [availableVoices, setAvailableVoices] = useState([]);
+  const [voiceName, setVoiceName] = useState('');
 
   const handleLanguageChange = (event) => {
+    console.log(event.target.value);
     setLanguage(event.target.value);
+    const googleVoiceName = getGoogleVoice(availableVoices[event.target.value]);
+    console.log(googleVoiceName);
+    if (googleVoiceName) {
+      setVoiceName(googleVoiceName);
+    }
   };
+
+  const handleVoiceChange = (event) => {
+    setVoiceName(event.target.value);
+  };
+
+  const handleVoicesChanged = () => {
+    const voices = window.speechSynthesis.getVoices();
+    const result = LANGUAGE_OPTIONS.reduce((acc, option) => {
+      const voiceNames = voices.filter((voice) => voice.lang === option.value).map((voice) => voice.name);
+      acc[option.value] = voiceNames;
+      return acc;
+    }, {});
+    setAvailableVoices(result);
+    const googleVoiceName = getGoogleVoice(result[language]);
+    if (googleVoiceName) {
+      setVoiceName(googleVoiceName);
+    }
+  };
+
+  useEffect(() => {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.addEventListener('voiceschanged', handleVoicesChanged);
+      return () => window.speechSynthesis.removeEventListener('voiceschanged', handleVoicesChanged);
+    }
+  }, []);
 
   return (
     <div className="App min-h-screen bg-gray-100 flex flex-col items-center justify-center">
-      <h1 className="text-4xl font-bold mb-8">
-        Let's chat in{' '}
-        <select
-          value={language}
-          onChange={handleLanguageChange}
-          className="text-4xl font-bold bg-transparent focus:outline-none"
-        >
-          <option value="de-DE">German!</option>
-          <option value="fr-CA">French!</option>
-          <option value="en-CA">English!</option>
-          <option value="jp-JP">Japanese!</option>
-        </select>
-      </h1>
-      <AudioRecorder />
+      <LanguageSelectorTitle options={LANGUAGE_OPTIONS} language={language} onChange={handleLanguageChange} />
+      <VoiceSelectorHeading options={availableVoices[language]} voiceName={voiceName} onChange={handleVoiceChange} />
+      <AudioRecorder language={language} voiceName={voiceName} />
     </div>
   );
 }

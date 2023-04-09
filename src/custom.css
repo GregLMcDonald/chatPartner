@@ -3,5 +3,5 @@
 }
 
 .recording-indicator.active {
-  @apply bg-red-500 animate-pulse;
+  @apply bg-red-500 border-red-500 animate-pulse;
 }

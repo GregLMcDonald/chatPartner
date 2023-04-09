@@ -17,7 +17,7 @@ app.use(cors());
 
 
 app.post('/api/gpt', async (req, res) => {
-  const { text } = req.body;
+  const { text, language } = req.body;
   try {
     const configuration = new Configuration({
       apiKey: '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',
@@ -27,7 +27,7 @@ app.post('/api/gpt', async (req, res) => {
       model: 'text-davinci-003',
       // model: 'gpt-3.5-turbo',
     //  prompt: `Reply to this in German: ${text}. End with a prompt to continue the conversation.`,
-      prompt: `Reply to this statement in a conversation in German: ${text}. Your reply should be a complete sentence and end with a prompt to continue the conversation.`,
+      prompt: `Reply to this statement in a conversation in ${language}: ${text}. Your reply should be a complete sentence and end with a prompt to continue the conversation.`,
       max_tokens: 50,
       temperature: 0.2,
     });
