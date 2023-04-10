@@ -14,7 +14,7 @@ const LANGUAGE_OPTIONS = [
 const POLLY_VOICES = {
   'de-DE': ['Vicki', 'Daniel'],
   'en-US': ['Ruth', 'Matthew', 'Joanna'],
-  'fr-FR': ['Gabrielle', 'Liam'],
+  'fr-FR': ['Gabrielle', 'Remi'],
   'ja-JP': ['Kazuha', 'Takumi', 'Tomoko'],
 };
 

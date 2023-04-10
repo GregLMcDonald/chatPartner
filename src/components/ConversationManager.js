@@ -15,6 +15,7 @@ const ConversationManager = ({
 }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [conversation, setConversation] = useState([]);
+  const [isResponding, setIsResponding] = useState(false);
 
   const conversationRef = useRef(conversation);
   const recognitionRef = useRef(null);
@@ -71,7 +72,9 @@ const ConversationManager = ({
       };
 
       recognitionRef.current.onend = () => {
+        setIsResponding(true);
         callGPTAPI(conversationRef.current).then((response) => {
+          setIsResponding(false);
           const { type, content } = response;
           if (type !== 'error') {
             textToSpeech(content, language, voiceName, usePolly);
@@ -114,7 +117,7 @@ const ConversationManager = ({
         <RecordButton isRecording={isRecording} startRecording={startRecording} />
         <StopButton isRecording={isRecording} stopRecording={stopRecording} />
       </div>
-      <Conversation conversation={conversation} clearConversation={clearConversation} historyCutoff={historyCutoff} />
+      <Conversation conversation={conversation} clearConversation={clearConversation} historyCutoff={historyCutoff} loading={isResponding} />
     </div>
   );
 };
