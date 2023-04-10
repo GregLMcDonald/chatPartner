@@ -11,25 +11,36 @@ const LANGUAGE_OPTIONS = [
   { label: 'Japanese ', value: 'ja-JP' },
 ];
 
+const POLLY_VOICES = {
+  'de-DE': ['Vicki', 'Daniel'],
+  'en-US': ['Ruth', 'Matthew', 'Joanna'],
+  'fr-FR': ['Gabrielle', 'Liam'],
+  'ja-JP': ['Kazuha', 'Takumi', 'Tomoko'],
+};
+
 const getGoogleVoice = (voices) => {
   return (voices || []).find((voice) => voice.includes('Google'));
 };
 
-
 function App() {
-  const [language, setLanguage] = useState('en-US');
+  const [language, setLanguage] = useState('de-DE');
   const [availableVoices, setAvailableVoices] = useState([]);
   const [voiceName, setVoiceName] = useState('');
+  const [usePolly, setUsePolly] = useState(true);
 
   const handleLanguageChange = (event) => {
     setLanguage(event.target.value);
-    const googleVoiceName = getGoogleVoice(availableVoices[event.target.value]);
-    if (googleVoiceName) {
-      setVoiceName(googleVoiceName);
-    }
   };
 
   const handleVoiceChange = (event) => {
+    setVoiceName(event.target.value);
+  };
+
+  const handleTextToSpeechSelectionChange = (event) => {
+    setUsePolly(event.target.value === 'polly');
+  };
+
+  const handlePollyVoiceChange = (event) => {
     setVoiceName(event.target.value);
   };
 
@@ -40,12 +51,23 @@ function App() {
       acc[option.value] = voiceNames;
       return acc;
     }, {});
+    console.log(result);
     setAvailableVoices(result);
-    const googleVoiceName = getGoogleVoice(result[language]);
-    if (googleVoiceName) {
-      setVoiceName(googleVoiceName);
-    }
   };
+
+  useEffect(() => {
+    console.log(voiceName);
+  }, [voiceName]);
+
+  useEffect(() => {
+    if (usePolly) {
+      setVoiceName(POLLY_VOICES[language][0]);
+    } else {
+      const voiceName = getGoogleVoice(availableVoices[language]);
+      setVoiceName(voiceName);
+    }
+  }, [language, usePolly, availableVoices]);
+
 
   useEffect(() => {
     if ('speechSynthesis' in window) {
@@ -57,8 +79,21 @@ function App() {
   return (
     <div className="App min-h-screen bg-gray-100 flex flex-col items-center justify-center">
       <LanguageSelectorTitle options={LANGUAGE_OPTIONS} language={language} onChange={handleLanguageChange} />
-      <VoiceSelectorHeading options={availableVoices[language]} voiceName={voiceName} onChange={handleVoiceChange} />
-      <ConversationManager language={language} voiceName={voiceName} />
+      {false && <VoiceSelectorHeading options={availableVoices[language]} voiceName={voiceName} onChange={handleVoiceChange} /> }
+      <ConversationManager language={language} voiceName={voiceName} usePolly={usePolly} />
+      <div className="flex flex-row justify-center items-start">
+        <label className="block font-semibold mb-2 whitespace-nowrap mr-2">Text-to-Speech Service:</label>
+        <select value={usePolly ? 'polly' : 'browser'} className="w-full border-gray-300 border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" onChange={handleTextToSpeechSelectionChange}>
+          <option value="browser">Browser</option>
+          <option value="polly">Amazon Polly</option>
+        </select>
+      </div>
+      <div className="flex flex-row justify-start items-center mt-3">
+        <label className="block font-semibold mb-2 whitespace-nowrap mr-2">Polly voice for language:</label>
+        <select value={voiceName} className="w-full border-gray-300 border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" onChange={handlePollyVoiceChange}>
+          {POLLY_VOICES[language].map((voice) => <option key={voice} value={voice}>{voice}</option>)}
+        </select>
+      </div>
     </div>
   );
 }

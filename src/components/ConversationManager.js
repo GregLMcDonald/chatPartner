@@ -7,7 +7,12 @@ import textToSpeech from '../services/textToSpeech';
 
 const DEFAULT_CUTOFF = 6;
 
-const ConversationManager = ({ language, voiceName, historyCutoff = DEFAULT_CUTOFF }) => {
+const ConversationManager = ({
+  language,
+  voiceName,
+  historyCutoff = DEFAULT_CUTOFF,
+  usePolly = false,
+}) => {
   const [isRecording, setIsRecording] = useState(false);
   const [conversation, setConversation] = useState([]);
 
@@ -69,7 +74,7 @@ const ConversationManager = ({ language, voiceName, historyCutoff = DEFAULT_CUTO
         callGPTAPI(conversationRef.current).then((response) => {
           const { type, content } = response;
           if (type !== 'error') {
-            textToSpeech(content, language, voiceName);
+            textToSpeech(content, language, voiceName, usePolly);
           }
           setConversation((prevConversation) => {
             return [...prevConversation, response];
