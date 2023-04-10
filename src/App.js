@@ -68,7 +68,6 @@ function App() {
     }
   }, [language, usePolly, availableVoices]);
 
-
   useEffect(() => {
     if ('speechSynthesis' in window) {
       window.speechSynthesis.addEventListener('voiceschanged', handleVoicesChanged);

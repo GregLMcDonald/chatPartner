@@ -20,6 +20,13 @@ const ConversationManager = ({
   const conversationRef = useRef(conversation);
   const recognitionRef = useRef(null);
 
+  const handleKeyDown = (event) => {
+    if (event.code === 'Space') {
+      event.preventDefault();
+      setIsRecording((isRecording) => !isRecording);
+    }
+  };
+
   useEffect(() => {
     if (isRecording) {
       startSpeechRecognition();
@@ -31,6 +38,13 @@ const ConversationManager = ({
   useEffect(() => {
     conversationRef.current = conversation;
   }, [conversation]);
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
 
   const callGPTAPI = async (messages) => {
     const cleanedMessages = messages.filter((message) => message.type === 'utterance').map(({ role, content}) => ({ role, content}));
