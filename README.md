@@ -1,10 +1,18 @@
-# Getting Started with Create React App
-
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+## Setup
+
+Put your OpenAI API key in a .env file in the project root directory:
+
+OPENAI_KEY=<your key>
 
 ## Available Scripts
 
 In the project directory, you can run:
+
+### `npm run start:server`
+
+Runs the Express server. The React app uses this server to make it's requests to OpenAI. Only the server knows the API key secret.
 
 ### `npm start`
 
