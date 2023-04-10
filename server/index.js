@@ -49,13 +49,18 @@ app.post('/api/text-to-speech', async (req, res) => {
 });
 
 
+// const buildSystemContent = (language) => (`You are a ${language} conversation partner. Always finish with a prompt to further the conversation. Keep your replies concise; never use more than twice the number of words as the user's last message.`)
+// const buildSystemContent = (language) => (`You are a conversation partner for a user learning ${language}. Be very concise and use simple language.`);
+const buildSystemContent = (language) => (`You are a conversation partner for a user learning ${language}. Always use simple language. Maximum reply length is 10 words.`);
+
 app.post('/api/gpt', async (req, res) => {
   const { messages, language } = req.body;
   try {
     axios.post('https://api.openai.com/v1/chat/completions', {
       model: 'gpt-3.5-turbo',
+      // model: 'gpt-4', // This is the new model, but it's in closed beta
       messages: [
-        {role: "system", content: `You are a ${language} conversation partner. Keep your response very short and to the point but alway finish with a prompt to further the conversation. Use at most twice the number of words as the user's last message.`},
+        {role: "system", content: buildSystemContent(language)},
         ...messages,
       ],
     }, config)

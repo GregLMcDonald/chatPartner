@@ -68,7 +68,7 @@ const Conversation = ({ conversation, clearConversation, historyCutoff, loading 
         <div className="flex justify-center mt-4">
           <CircleLoader color={'#888'} loading={loading} size={30} />
         </div>
-        <div ref={conversationEndRef} />
+        <div className="mt-8" ref={conversationEndRef} />
       </div>
       <div className="mt-1 text-center text-sm text-gray-500" style={hardDimensionsStyleWidth}>{`Only the ${historyCutoff} most recent messages in the conversation are currently used to determine the reply.`}</div>
     </div>
