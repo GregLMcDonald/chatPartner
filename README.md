@@ -2,9 +2,12 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Setup
 
-Put your OpenAI API key in a .env file in the project root directory:
+Put your OpenAI API key and AWS IAM credentials in a .env file in the project root directory. Your IAM user should minimally have full access to AmazonPolly.
 
-OPENAI_KEY=<your key>
+OPENAI_KEY=
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
+AWS_REGION=
 
 ## Available Scripts
 
