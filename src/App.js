@@ -1,6 +1,6 @@
 import React, { useEffect, useState} from 'react';
 import './custom.css';
-import AudioRecorder from './components/AudioRecorder';
+import ConversationManager from './components/ConversationManager';
 import LanguageSelectorTitle from './components/LanguageSelectorTitle';
 import VoiceSelectorHeading from './components/VoiceSelectorHeading';
 
@@ -58,7 +58,7 @@ function App() {
     <div className="App min-h-screen bg-gray-100 flex flex-col items-center justify-center">
       <LanguageSelectorTitle options={LANGUAGE_OPTIONS} language={language} onChange={handleLanguageChange} />
       <VoiceSelectorHeading options={availableVoices[language]} voiceName={voiceName} onChange={handleVoiceChange} />
-      <AudioRecorder language={language} voiceName={voiceName} />
+      <ConversationManager language={language} voiceName={voiceName} />
     </div>
   );
 }

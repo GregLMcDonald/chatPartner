@@ -7,7 +7,7 @@ import textToSpeech from '../services/textToSpeech';
 
 const DEFAULT_CUTOFF = 6;
 
-const AudioRecorder = ({ language, voiceName, historyCutoff = DEFAULT_CUTOFF }) => {
+const ConversationManager = ({ language, voiceName, historyCutoff = DEFAULT_CUTOFF }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [conversation, setConversation] = useState([]);
 
@@ -114,7 +114,7 @@ const AudioRecorder = ({ language, voiceName, historyCutoff = DEFAULT_CUTOFF }) 
   );
 };
 
-export default AudioRecorder;
+export default ConversationManager;
 
 
 
