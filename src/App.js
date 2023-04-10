@@ -51,13 +51,8 @@ function App() {
       acc[option.value] = voiceNames;
       return acc;
     }, {});
-    console.log(result);
     setAvailableVoices(result);
   };
-
-  useEffect(() => {
-    console.log(voiceName);
-  }, [voiceName]);
 
   useEffect(() => {
     if (usePolly) {

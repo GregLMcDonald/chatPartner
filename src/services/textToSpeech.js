@@ -1,7 +1,6 @@
 import axios from 'axios';
 
 const textToSpeech = (text, language, voiceName, usePolly) => {
-  console.log(text, language, voiceName, usePolly);
   if (usePolly) {
     return textToSpeechPolly(text, language, voiceName);
   } else {

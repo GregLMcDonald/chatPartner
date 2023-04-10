@@ -24,17 +24,9 @@ const polly = new AWS.Polly({
   region: process.env.AWS_REGION,
 });
 
-const POLLY_VOICES = {
-  'de-DE': ['Vicki', 'Daniel'],
-  'en-US': ['Ruth', 'Matthew', 'Joanna'],
-  'fr-FR': ['Gabrielle', 'Liam'],
-  'ja-JP': ['Kazuha', 'Takumi', 'Tomoko'],
-};
-
 // Define a route to handle text-to-speech requests
 app.post('/api/text-to-speech', async (req, res) => {
   const { text, language, voiceName } = req.body;
-  console.log(req.body);
 
   // Set the options for the synthesis task
   const params = {
