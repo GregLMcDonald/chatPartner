@@ -33,6 +33,7 @@ const ConversationManager = ({
     } else {
       stopSpeechRecognition();
     }
+    // eslint-disable-next-line
   }, [isRecording]);
 
   useEffect(() => {

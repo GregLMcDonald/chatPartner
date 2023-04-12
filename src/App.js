@@ -3,6 +3,12 @@ import './custom.css';
 import ConversationManager from './components/ConversationManager';
 import LanguageSelectorTitle from './components/LanguageSelectorTitle';
 import VoiceSelectorHeading from './components/VoiceSelectorHeading';
+import { Amplify } from 'aws-amplify';
+import { withAuthenticator } from '@aws-amplify/ui-react';
+import '@aws-amplify/ui-react/styles.css';
+import awsExports from './aws-exports';
+
+Amplify.configure(awsExports);
 
 const LANGUAGE_OPTIONS = [
   { label: 'German ', value: 'de-DE' },
@@ -22,7 +28,7 @@ const getGoogleVoice = (voices) => {
   return (voices || []).find((voice) => voice.includes('Google'));
 };
 
-function App() {
+function App({ signOut, user }) {
   const [language, setLanguage] = useState('de-DE');
   const [availableVoices, setAvailableVoices] = useState([]);
   const [voiceName, setVoiceName] = useState('');
@@ -72,6 +78,13 @@ function App() {
 
   return (
     <div className="App min-h-screen bg-gray-100 flex flex-col items-center justify-center">
+
+      <div className="border border-gray-500 rounded-lg p-4 my-4">
+        <h1 className="text-2xl font-bold mb-4">Hello {user.email}</h1>
+        <button className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-lg shadow-md" onClick={signOut}>Sign out</button>
+      </div>
+
+
       <LanguageSelectorTitle options={LANGUAGE_OPTIONS} language={language} onChange={handleLanguageChange} />
       {false && <VoiceSelectorHeading options={availableVoices[language]} voiceName={voiceName} onChange={handleVoiceChange} /> }
       <ConversationManager language={language} voiceName={voiceName} usePolly={usePolly} />
@@ -92,4 +105,4 @@ function App() {
   );
 }
 
-export default App;
+export default withAuthenticator(App);

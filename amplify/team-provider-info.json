@@ -1,0 +1,23 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-germanconvo-dev-201032-authRole",
+      "UnauthRoleArn": "arn:aws:iam::775745224945:role/amplify-germanconvo-dev-201032-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::775745224945:role/amplify-germanconvo-dev-201032-authRole",
+      "Region": "ca-central-1",
+      "DeploymentBucketName": "amplify-germanconvo-dev-201032-deployment",
+      "UnauthRoleName": "amplify-germanconvo-dev-201032-unauthRole",
+      "StackName": "amplify-germanconvo-dev-201032",
+      "StackId": "arn:aws:cloudformation:ca-central-1:775745224945:stack/amplify-germanconvo-dev-201032/71adc050-d8c6-11ed-9c68-0e3b7469e336",
+      "AmplifyAppId": "d1hjcq1zhrihu3"
+    },
+    "categories": {
+      "auth": {
+        "germanconvo118e1077": {}
+      },
+      "hosting": {
+        "S3AndCloudFront": {}
+      }
+    }
+  }
+}
