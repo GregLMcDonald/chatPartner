@@ -15,7 +15,6 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const awsServerlessExpressMiddleware = require('aws-serverless-express/middleware')
 const cors = require('cors');
-const { Amplify } = require('aws-amplify');
 
 require('dotenv').config();
 
