@@ -1,4 +1,5 @@
-import axios from 'axios';
+// import axios from 'axios';
+import { Auth, API } from 'aws-amplify';
 
 const textToSpeech = (text, language, voiceName, usePolly) => {
   if (usePolly) {
@@ -31,7 +32,17 @@ const textToSpeechPolly = async (text, language, voiceName) => {
   if (!text) {
     return;
   }
-  const response = await axios.post('https://5arusik4qa.execute-api.ca-central-1.amazonaws.com/prod/api/text-to-speech', { text, language, voiceName });
+
+  const myInit = {
+        headers: {
+          Authorization: `Bearer ${(await Auth.currentSession())
+            .getIdToken()
+            .getJwtToken()}`,
+        },
+        body: { text, language, voiceName },
+      };
+  const response = await API.post("thirdpartyhard", `/text-to-speech`, myInit);
+  // const response = await axios.post('https://5arusik4qa.execute-api.ca-central-1.amazonaws.com/prod/api/text-to-speech', { text, language, voiceName });
   const { AudioStream: { data }, ContentType } = response.data;
 
   const uInt8Array = new Uint8Array(data);

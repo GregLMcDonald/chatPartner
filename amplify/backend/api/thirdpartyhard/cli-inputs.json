@@ -1,8 +1,21 @@
 {
   "version": 1,
   "paths": {
-    "/items": {
-      "name": "/items",
+    "/gpt": {
+      "name": "/gpt",
+      "lambdaFunction": "thirdpartyhard",
+      "permissions": {
+        "setting": "private",
+        "auth": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ]
+      }
+    },
+    "/text-to-speech": {
+      "name": "/text-to-speech",
       "lambdaFunction": "thirdpartyhard",
       "permissions": {
         "setting": "private",

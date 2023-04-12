@@ -60,7 +60,7 @@ const ConversationManager = ({
         },
         body: { messages: cutoffMessages, language },
       };
-      const response = await API.post("thirdpartyhard", `/api/gpt`, myInit);
+      const response = await API.post("thirdpartyhard", `/gpt`, myInit);
       // const response = await axios.post('https://5arusik4qa.execute-api.ca-central-1.amazonaws.com/prod/api/gpt', { messages: cutoffMessages, language });
       const { role, content } = response.data;
       return { type: 'utterance', role, content, language }
