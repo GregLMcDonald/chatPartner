@@ -101,6 +101,7 @@ const ConversationManager = ({
       recognitionRef.current.onend = () => {
         setIsResponding(true);
         callGPTAPI(conversationRef.current).then((response) => {
+          console.log(response);
           setIsResponding(false);
           const { type, content } = response;
           if (type !== 'error') {
