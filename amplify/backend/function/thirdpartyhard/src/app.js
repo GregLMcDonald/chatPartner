@@ -61,8 +61,11 @@ app.post('/text-to-speech', async (req, res) => {
 const buildSystemContent = (language) => (`You are a conversation partner for a user learning ${language}. Always use simple language. Maximum reply length is 10 words.`);
 
 app.post('/gpt', async (req, res) => {
+  console.log('REQ', req);
  // console.log('GPT request:', req.body);
-  const { messages, language } = req.event.body;
+  console.log({body: req.body});
+  console.log({event: req.event});
+  const { messages, language } = req.body || {};
 console.log({ messages, language });
   const { Parameter } = await (new AWS.SSM())
     .getParameter({
