@@ -1,3 +1,17 @@
+/*
+Use the following code to retrieve configured secrets from SSM:
+
+const aws = require('aws-sdk');
+
+const { Parameters } = await (new aws.SSM())
+  .getParameters({
+    Names: ["OPENAI_KEY"].map(secretName => process.env[secretName]),
+    WithDecryption: true,
+  })
+  .promise();
+
+Parameters will be of the form { Name: 'secretName', Value: 'secretValue', ... }[]
+*/
 /* Amplify Params - DO NOT EDIT
 	ENV
 	REGION
@@ -25,15 +39,13 @@ app.use(bodyParser.json())
 app.use(awsServerlessExpressMiddleware.eventContext())
 app.use(cors());
 
-
-// // Enable CORS for all methods
-// app.use(function(req, res, next) {
-//   res.header("Access-Control-Allow-Origin", "*")
-//   res.header("Access-Control-Allow-Headers", "*")
-//   next()
-// });
-
-const openaiKey = process.env.OPENAI_KEY;
+const { Parameter } = await (new AWS.SSM())
+  .getParameter({
+    Name: "OPENAI_KEY",
+    WithDecryption: true,
+  })
+  .promise();
+const openaiKey = Parameter.value;
 const openai_config = {
   headers: {
     'Content-Type': 'application/json',

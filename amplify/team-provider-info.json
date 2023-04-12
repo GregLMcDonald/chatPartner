@@ -44,7 +44,7 @@
         "thirdpartyhard": {
           "deploymentBucketName": "amplify-germanconvo-prod-210402-deployment",
           "s3Key": "amplify-builds/thirdpartyhard-2b48304331524b464a63-build.zip",
-          "openaiKey": "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"
+          "secretsPathAmplifyAppId": "d1hjcq1zhrihu3"
         }
       },
       "api": {

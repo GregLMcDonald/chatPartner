@@ -1,10 +1,8 @@
 {
   "lambdaLayers": [],
-  "environmentVariableList": [
-    {
-      "cloudFormationParameterName": "openaiKey",
-      "environmentVariableName": "OPENAI_KEY"
-    }
-  ],
-  "permissions": {}
+  "environmentVariableList": [],
+  "permissions": {},
+  "secretNames": [
+    "OPENAI_KEY"
+  ]
 }
