@@ -74,13 +74,8 @@ function App({ signOut, user }) {
   }, []);
 
   return (
-    <div className="App min-h-screen bg-gray-100 flex flex-col items-center justify-center">
-
-      <div className="border border-gray-500 rounded-lg p-4 my-4">
-        <h1 className="text-2xl font-bold mb-4">Hello {user.email}</h1>
-        <button className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-lg shadow-md" onClick={signOut}>Sign out</button>
-      </div>
-
+    <div className="App min-h-screen p-4 bg-gray-100 flex flex-col items-center justify-center">
+      <button className="absolute top-2 right-4 text-red-500 font-semibold hover:text-red-600 py-2 px-4 rounded-lg shadow-none" onClick={signOut}>Sign out</button>
 
       <LanguageSelectorTitle options={LANGUAGE_OPTIONS} language={language} onChange={handleLanguageChange} />
       {false && <VoiceSelectorHeading options={availableVoices[language]} voiceName={voiceName} onChange={handleVoiceChange} /> }

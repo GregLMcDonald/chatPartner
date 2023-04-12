@@ -37,7 +37,7 @@ const polly = new AWS.Polly({
 
 
 // Define a route to handle text-to-speech requests
-app.post('/api/text-to-speech', async (req, res) => {
+app.post('/text-to-speech', async (req, res) => {
   const { text, language, voiceName } = req.body;
 
   // Set the options for the synthesis task
@@ -62,7 +62,7 @@ app.post('/api/text-to-speech', async (req, res) => {
 
 const buildSystemContent = (language) => (`You are a conversation partner for a user learning ${language}. Always use simple language. Maximum reply length is 10 words.`);
 
-app.post('/api/gpt', async (req, res) => {
+app.post('/gpt', async (req, res) => {
   const { messages, language } = req.body;
   const { Parameter } = await (new AWS.SSM())
     .getParameter({

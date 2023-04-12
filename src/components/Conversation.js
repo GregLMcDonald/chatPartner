@@ -30,8 +30,11 @@ const Conversation = ({ conversation, clearConversation, historyCutoff, loading 
     }
   }
 
-  const hardDimensionsStyleWidth = { maxWidth: '35rem', minWidth: '35rem'};
-  const hardDimensionsStyleHeight = { minHeight: '40rem', maxHeight: '40rem' };
+  // const hardDimensionsStyleWidth = { maxWidth: '35rem', minWidth: '35rem'};
+  // const hardDimensionsStyleHeight = { minHeight: '40rem', maxHeight: '40rem' };
+
+  const hardDimensionsStyleWidth = { maxWidth: '35rem'};
+  const hardDimensionsStyleHeight = { maxHeight: '40rem' };
 
   return (
     <div className="mb-4">
