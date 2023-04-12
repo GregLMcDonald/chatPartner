@@ -33,6 +33,10 @@ const textToSpeechPolly = async (text, language, voiceName) => {
     return;
   }
 
+  // The API is setup to only accepts request from authenticated users. The
+  // Authorization header is set to the current user's JWT token. The
+  // thirdpartyhard lambda function is configured to proxy the request to the
+  // AWS Polly API.
   const myInit = {
         headers: {
           Authorization: `Bearer ${(await Auth.currentSession())
@@ -42,8 +46,6 @@ const textToSpeechPolly = async (text, language, voiceName) => {
         },
         body: { text, language, voiceName },
       };
-
-  console.log(myInit);
   const response = await API.post("thirdpartyhard", '/text-to-speech', myInit);
   const { AudioStream: { data }, ContentType } = response;
 

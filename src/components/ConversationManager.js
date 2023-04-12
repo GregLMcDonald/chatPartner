@@ -52,6 +52,12 @@ const ConversationManager = ({
     const cleanedMessages = messages.filter((message) => message.type === 'utterance').map(({ role, content}) => ({ role, content}));
     const cutoffMessages = cleanedMessages.slice(Math.max(cleanedMessages.length - historyCutoff, 0));
     try {
+      // The calls to the API (which are handled by the thirdpartyhard lambda function) require
+      // authentication. The Amplify Auth.currentSession() method returns a promise that resolves
+      // with the current session. The session object has a getIdToken() method that returns a
+      // promise that resolves with the current id token. The id token has a getJwtToken() method
+      // that returns the actual JWT token. The JWT token is passed in the Authorization header
+      // of the API call.
       const session = await Auth.currentSession();
       const token = session.getIdToken().getJwtToken();
       const myInit = {
@@ -61,6 +67,14 @@ const ConversationManager = ({
         },
         body: { messages: cutoffMessages, language },
       };
+
+      // Because Amplify is configured in index.js, the API methods (post(),
+      // etc.) know how to interact with the AWS services that are used in the
+      // app. The API.post() method makes a POST request to the /gpt endpoint of
+      // the thirdpartyhard lambda function. The URL to use for the API is
+      // provided through the Amplify configuration. The thirdpartyhard lambda
+      // function is configured to proxy the request to the GPT-3 API.
+
       const response = await API.post("thirdpartyhard", `/gpt`, myInit);
       const { role, content } = response;
       return { type: 'utterance', role, content, language }
@@ -99,7 +113,6 @@ const ConversationManager = ({
       recognitionRef.current.onend = () => {
         setIsResponding(true);
         callGPTAPI(conversationRef.current).then((response) => {
-          console.log(response);
           setIsResponding(false);
           const { type, content } = response;
           if (type !== 'error') {

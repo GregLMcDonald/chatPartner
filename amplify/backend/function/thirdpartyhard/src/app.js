@@ -52,7 +52,6 @@ app.post('/text-to-speech', async (req, res) => {
     TextType: 'text',
     VoiceId: voiceName, // POLLY_VOICES[language][1],
   };
-  console.log(params);
 
   // Use Polly to synthesize the speech
   polly.synthesizeSpeech(params, (err, data) => {
