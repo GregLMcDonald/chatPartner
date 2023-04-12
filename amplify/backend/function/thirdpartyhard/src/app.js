@@ -14,6 +14,7 @@ const AWS = require('aws-sdk');
 const express = require('express')
 const bodyParser = require('body-parser')
 const awsServerlessExpressMiddleware = require('aws-serverless-express/middleware')
+const cors = require('cors');
 
 require('dotenv').config();
 
@@ -21,11 +22,9 @@ require('dotenv').config();
 const app = express();
 app.use(bodyParser.json());
 app.use(awsServerlessExpressMiddleware.eventContext());
+app.use(cors());
+app.options('*', cors());
 
-app.options('*', (req, res) => {
-  setCorsHeaders(res);
-  res.sendStatus(200);
-});
 
 const { Parameter } = await (new AWS.SSM())
   .getParameter({
@@ -48,16 +47,10 @@ const polly = new AWS.Polly({
   region: process.env.AWS_REGION,
 });
 
-function setCorsHeaders(res) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-  res.setHeader("Access-Control-Allow-Methods", "OPTIONS,POST");
-}
 
 // Define a route to handle text-to-speech requests
 app.post('/api/text-to-speech', async (req, res) => {
   const { text, language, voiceName } = req.body;
-  res = setCorsHeaders(res);
 
   // Set the options for the synthesis task
   const params = {
@@ -82,7 +75,6 @@ app.post('/api/text-to-speech', async (req, res) => {
 const buildSystemContent = (language) => (`You are a conversation partner for a user learning ${language}. Always use simple language. Maximum reply length is 10 words.`);
 
 app.post('/api/gpt', async (req, res) => {
-  res = setCorsHeaders(res);
   const { messages, language } = req.body;
   try {
     axios.post('https://api.openai.com/v1/chat/completions', {
