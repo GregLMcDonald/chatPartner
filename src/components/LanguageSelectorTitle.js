@@ -5,7 +5,7 @@ const LanguageSelectorTitle = ({
   language,
   onChange = () => {}
 }) => (
-  <h1 className="text-4xl font-bold mb-4">
+  <h1 className="text-center text-4xl font-bold mb-4 mt-8">
     Let's chat in{' '}
     <select
       value={language}

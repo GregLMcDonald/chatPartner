@@ -74,24 +74,21 @@ function App({ signOut, user }) {
   }, []);
 
   return (
-    <div className="App min-h-screen p-4 bg-gray-100 flex flex-col items-center justify-center">
-      <button className="absolute top-2 right-4 text-red-500 font-semibold hover:text-red-600 py-2 px-4 rounded-lg shadow-none" onClick={signOut}>Sign out</button>
-
-      <LanguageSelectorTitle options={LANGUAGE_OPTIONS} language={language} onChange={handleLanguageChange} />
-      {false && <VoiceSelectorHeading options={availableVoices[language]} voiceName={voiceName} onChange={handleVoiceChange} /> }
-      <ConversationManager language={language} voiceName={voiceName} usePolly={usePolly} />
-      <div className="flex flex-row justify-center items-start">
-        <label className="block font-semibold mb-2 whitespace-nowrap mr-2">Text-to-Speech Service:</label>
-        <select value={usePolly ? 'polly' : 'browser'} className="w-full border-gray-300 border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" onChange={handleTextToSpeechSelectionChange}>
-          <option value="browser">Browser</option>
-          <option value="polly">Amazon Polly</option>
-        </select>
-      </div>
-      <div className="flex flex-row justify-start items-center mt-3">
-        <label className="block font-semibold mb-2 whitespace-nowrap mr-2">Polly voice for language:</label>
-        <select value={voiceName} className="w-full border-gray-300 border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" onChange={handlePollyVoiceChange}>
-          {POLLY_VOICES[language].map((voice) => <option key={voice} value={voice}>{voice}</option>)}
-        </select>
+    <div className="App min-h-screen p-4 bg-gray-100 flex flex-col items-center justify-flex-start">
+      <div>
+        <button className="absolute top-2 right-4 text-red-500 font-semibold hover:text-red-600 py-2 px-4 rounded-lg shadow-none" onClick={signOut}>Sign out</button>
+        <LanguageSelectorTitle options={LANGUAGE_OPTIONS} language={language} onChange={handleLanguageChange} />
+        {false && <VoiceSelectorHeading options={availableVoices[language]} voiceName={voiceName} onChange={handleVoiceChange} /> }
+        <ConversationManager language={language} voiceName={voiceName} usePolly={usePolly} />
+        <div className="flex flex-row justify-center items-start">
+          <select value={usePolly ? 'polly' : 'browser'} className="w-half border-gray-300 border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" onChange={handleTextToSpeechSelectionChange}>
+            <option value="browser">Browser</option>
+            <option value="polly">Amazon Polly</option>
+          </select>
+          <select value={voiceName} className="w-half border-gray-300 border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" onChange={handlePollyVoiceChange}>
+            {POLLY_VOICES[language].map((voice) => <option key={voice} value={voice}>{voice}</option>)}
+          </select>
+        </div>
       </div>
     </div>
   );
