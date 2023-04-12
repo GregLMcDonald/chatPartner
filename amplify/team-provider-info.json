@@ -19,5 +19,26 @@
         "S3AndCloudFront": {}
       }
     }
+  },
+  "prod": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-germanconvo-prod-210402-authRole",
+      "UnauthRoleArn": "arn:aws:iam::775745224945:role/amplify-germanconvo-prod-210402-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::775745224945:role/amplify-germanconvo-prod-210402-authRole",
+      "Region": "ca-central-1",
+      "DeploymentBucketName": "amplify-germanconvo-prod-210402-deployment",
+      "UnauthRoleName": "amplify-germanconvo-prod-210402-unauthRole",
+      "StackName": "amplify-germanconvo-prod-210402",
+      "StackId": "arn:aws:cloudformation:ca-central-1:775745224945:stack/amplify-germanconvo-prod-210402/ea851940-d8cd-11ed-ae52-022bd1d5c8be",
+      "AmplifyAppId": "d1hjcq1zhrihu3"
+    },
+    "categories": {
+      "auth": {
+        "germanconvo118e1077": {}
+      },
+      "hosting": {
+        "S3AndCloudFront": {}
+      }
+    }
   }
 }
