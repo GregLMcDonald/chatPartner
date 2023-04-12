@@ -61,8 +61,9 @@ app.post('/text-to-speech', async (req, res) => {
 const buildSystemContent = (language) => (`You are a conversation partner for a user learning ${language}. Always use simple language. Maximum reply length is 10 words.`);
 
 app.post('/gpt', async (req, res) => {
-  console.log('GPT request:', req.body);
+ // console.log('GPT request:', req.body);
   const { messages, language } = req.body;
+console.log({ messages, language });
   const { Parameter } = await (new AWS.SSM())
     .getParameter({
       Name: "/amplify/d1hjcq1zhrihu3/prod/AMPLIFY_thirdpartyhard_OPENAI_KEY",
