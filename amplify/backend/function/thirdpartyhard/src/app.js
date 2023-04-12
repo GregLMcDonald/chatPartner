@@ -69,6 +69,7 @@ app.post('/gpt', async (req, res) => {
       WithDecryption: true,
     })
     .promise();
+  console.log(Parameter);
   const openaiKey = Parameter.value;
   const openai_config = {
     headers: {
@@ -76,6 +77,7 @@ app.post('/gpt', async (req, res) => {
       'Authorization': `Bearer ${openaiKey}`,
     },
   };
+  console.log(openai_config);
   try {
     axios.post('https://api.openai.com/v1/chat/completions', {
       model: 'gpt-3.5-turbo',
