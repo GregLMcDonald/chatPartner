@@ -42,7 +42,9 @@ const textToSpeechPolly = async (text, language, voiceName) => {
         },
         body: { text, language, voiceName },
       };
-  const response = await API.post("thirdpartyhard", `/text-to-speech`, myInit);
+
+  console.log(myInit);
+  const response = await API.post("thirdpartyhard", '/text-to-speech', myInit);
   const { AudioStream: { data }, ContentType } = response;
 
   const uInt8Array = new Uint8Array(data);

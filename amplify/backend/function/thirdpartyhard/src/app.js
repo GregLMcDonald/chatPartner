@@ -47,10 +47,12 @@ app.post('/text-to-speech', async (req, res) => {
     TextType: 'text',
     VoiceId: voiceName, // POLLY_VOICES[language][1],
   };
+  console.log(params);
 
   // Use Polly to synthesize the speech
   polly.synthesizeSpeech(params, (err, data) => {
     if (err) {
+      console.log(err);
       res.status(500).json({ error: 'Error calling Polly API' });
     } else {
       res.send(data);
