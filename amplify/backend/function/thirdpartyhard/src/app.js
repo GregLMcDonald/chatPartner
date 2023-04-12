@@ -70,7 +70,7 @@ app.post('/gpt', async (req, res) => {
     })
     .promise();
   console.log(Parameter);
-  const openaiKey = Parameter.value;
+  const openaiKey = Parameter.Value;
   const openai_config = {
     headers: {
       'Content-Type': 'application/json',
