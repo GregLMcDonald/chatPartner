@@ -62,7 +62,7 @@ const buildSystemContent = (language) => (`You are a conversation partner for a 
 
 app.post('/gpt', async (req, res) => {
  // console.log('GPT request:', req.body);
-  const { messages, language } = req.body;
+  const { messages, language } = req.event.body;
 console.log({ messages, language });
   const { Parameter } = await (new AWS.SSM())
     .getParameter({
