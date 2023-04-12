@@ -62,9 +62,7 @@ const ConversationManager = ({
         body: { messages: cutoffMessages, language },
       };
       const response = await API.post("thirdpartyhard", `/gpt`, myInit);
-      console.log(response);
-      console.log(JSON.parse(response));
-      const { role, content } = JSON.parse(response);
+      const { role, content } = response;
       return { type: 'utterance', role, content, language }
     } catch (error) {
       return { type: 'error', text: 'Oops.', language }
