@@ -74,7 +74,7 @@ function App({ signOut, user }) {
   }, []);
 
   return (
-    <div className="App min-h-screen p-4 bg-gray-100 flex flex-col items-center justify-flex-start">
+    <div className="App min-h-screen py-4 px-8 bg-gray-100 flex flex-col items-center justify-flex-start">
       <div>
         <button className="absolute top-2 right-4 text-red-500 font-semibold hover:text-red-600 py-2 px-4 rounded-lg shadow-none" onClick={signOut}>Sign out</button>
         <LanguageSelectorTitle options={LANGUAGE_OPTIONS} language={language} onChange={handleLanguageChange} />

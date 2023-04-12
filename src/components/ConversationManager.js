@@ -139,7 +139,7 @@ const ConversationManager = ({
   return (
     <div className="mb-8">
       <RecordingIndicator isRecording={isRecording} />
-      <div className="mb-4 flex flex-row items-center justify-center">
+      <div className="mb-4 flex flex-row items-center justify-center sticky top-8 z-10">
         <RecordButton isRecording={isRecording} startRecording={startRecording} />
         <StopButton isRecording={isRecording} stopRecording={stopRecording} />
       </div>
