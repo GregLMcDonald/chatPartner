@@ -62,8 +62,9 @@ const ConversationManager = ({
         body: { messages: cutoffMessages, language },
       };
       const response = await API.post("thirdpartyhard", `/gpt`, myInit);
-      // const response = await axios.post('https://5arusik4qa.execute-api.ca-central-1.amazonaws.com/prod/api/gpt', { messages: cutoffMessages, language });
-      const { role, content } = response.data;
+      console.log(response);
+      console.log(JSON.parse(response));
+      const { role, content } = JSON.parse(response);
       return { type: 'utterance', role, content, language }
     } catch (error) {
       return { type: 'error', text: 'Oops.', language }
