@@ -25,18 +25,17 @@ app.use(awsServerlessExpressMiddleware.eventContext());
 app.use(cors());
 app.options('*', cors());
 
-
-const aws_config = {
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: process.env.AWS_REGION,
-}
-console.log(aws_config);
-const polly = new AWS.Polly(aws_config);
-
 // Define a route to handle text-to-speech requests
 app.post('/text-to-speech', async (req, res) => {
   const { text, language, voiceName } = req.body;
+
+  const aws_config = {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    region: process.env.AWS_REGION,
+  }
+  console.log(aws_config);
+  const polly = new AWS.Polly(aws_config);
 
   // Set the options for the synthesis task
   const params = {
