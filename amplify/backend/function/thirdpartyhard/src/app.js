@@ -26,19 +26,7 @@ app.use(cors());
 app.options('*', cors());
 
 
-const { Parameter } = await (new AWS.SSM())
-  .getParameter({
-    Name: "OPENAI_KEY",
-    WithDecryption: true,
-  })
-  .promise();
-const openaiKey = Parameter.value;
-const openai_config = {
-  headers: {
-    'Content-Type': 'application/json',
-    'Authorization': `Bearer ${openaiKey}`,
-  },
-};
+
 
 // Create a new instance of Polly
 const polly = new AWS.Polly({
@@ -76,6 +64,19 @@ const buildSystemContent = (language) => (`You are a conversation partner for a 
 
 app.post('/api/gpt', async (req, res) => {
   const { messages, language } = req.body;
+  const { Parameter } = await (new AWS.SSM())
+    .getParameter({
+      Name: "OPENAI_KEY",
+      WithDecryption: true,
+    })
+    .promise();
+  const openaiKey = Parameter.value;
+  const openai_config = {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${openaiKey}`,
+    },
+  };
   try {
     axios.post('https://api.openai.com/v1/chat/completions', {
       model: 'gpt-3.5-turbo',

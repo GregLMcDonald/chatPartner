@@ -52,11 +52,11 @@ const ConversationManager = ({
     const cleanedMessages = messages.filter((message) => message.type === 'utterance').map(({ role, content}) => ({ role, content}));
     const cutoffMessages = cleanedMessages.slice(Math.max(cleanedMessages.length - historyCutoff, 0));
     try {
+      const session = await Auth.currentSession();
+      const token = session.getIdToken().getJwtToken();
       const myInit = {
         headers: {
-          Authorization: `Bearer ${(await Auth.currentSession())
-            .getIdToken()
-            .getJwtToken()}`,
+          Authorization: `Bearer ${token}`,
         },
         body: { messages: cutoffMessages, language },
       };
