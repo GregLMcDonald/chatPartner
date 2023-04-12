@@ -75,21 +75,26 @@ app.post('/gpt', async (req, res) => {
       'Authorization': `Bearer ${openaiKey}`,
     },
   };
-  axios.post('https://api.openai.com/v1/chat/completions', {
-    model: 'gpt-3.5-turbo',
-    // model: 'gpt-4', // This is the new model, but it's in closed beta
-    messages: [
-      {role: "system", content: buildSystemContent(language)},
-      ...messages,
-    ],
-  }, openai_config)
-  .then(response => {
-    res.json(response.data.choices[0].message);
-  })
-  .catch(error => {
+  try {
+    axios.post('https://api.openai.com/v1/chat/completions', {
+      model: 'gpt-3.5-turbo',
+      // model: 'gpt-4', // This is the new model, but it's in closed beta
+      messages: [
+        {role: "system", content: buildSystemContent(language)},
+        ...messages,
+      ],
+    }, openai_config)
+    .then(response => {
+      res.json(response.data.choices[0].message);
+    })
+    .catch(error => {
+      console.error('Error calling GPT API:', error);
+      res.status(500).json({  message: 'Error response GPT API', error });
+    });
+  } catch (error) {
     console.error('Error calling GPT API:', error);
-    res.status(500).json({ message: 'Error calling GPT API', error: error });
-  });
+    res.status(500).json({ message: 'Error calling GPT API', error });
+  }
 });
 
 // Export the app object. When executing the application local this does nothing. However,
