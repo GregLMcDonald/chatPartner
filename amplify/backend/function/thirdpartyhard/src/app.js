@@ -1,17 +1,3 @@
-/*
-Use the following code to retrieve configured secrets from SSM:
-
-const aws = require('aws-sdk');
-
-const { Parameters } = await (new aws.SSM())
-  .getParameters({
-    Names: ["OPENAI_KEY"].map(secretName => process.env[secretName]),
-    WithDecryption: true,
-  })
-  .promise();
-
-Parameters will be of the form { Name: 'secretName', Value: 'secretValue', ... }[]
-*/
 /* Amplify Params - DO NOT EDIT
 	ENV
 	REGION
@@ -23,8 +9,6 @@ or in the "license" file accompanying this file. This file is distributed on an 
 See the License for the specific language governing permissions and limitations under the License.
 */
 
-
-const cors = require('cors');
 const axios = require('axios');
 const AWS = require('aws-sdk');
 const express = require('express')
@@ -34,10 +18,14 @@ const awsServerlessExpressMiddleware = require('aws-serverless-express/middlewar
 require('dotenv').config();
 
 // declare a new express app
-const app = express()
-app.use(bodyParser.json())
-app.use(awsServerlessExpressMiddleware.eventContext())
-app.use(cors());
+const app = express();
+app.use(bodyParser.json());
+app.use(awsServerlessExpressMiddleware.eventContext());
+
+app.options('*', (req, res) => {
+  setCorsHeaders(res);
+  res.sendStatus(200);
+});
 
 const { Parameter } = await (new AWS.SSM())
   .getParameter({
@@ -60,9 +48,16 @@ const polly = new AWS.Polly({
   region: process.env.AWS_REGION,
 });
 
+function setCorsHeaders(res) {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  res.setHeader("Access-Control-Allow-Methods", "OPTIONS,POST");
+}
+
 // Define a route to handle text-to-speech requests
 app.post('/api/text-to-speech', async (req, res) => {
   const { text, language, voiceName } = req.body;
+  res = setCorsHeaders(res);
 
   // Set the options for the synthesis task
   const params = {
@@ -87,6 +82,7 @@ app.post('/api/text-to-speech', async (req, res) => {
 const buildSystemContent = (language) => (`You are a conversation partner for a user learning ${language}. Always use simple language. Maximum reply length is 10 words.`);
 
 app.post('/api/gpt', async (req, res) => {
+  res = setCorsHeaders(res);
   const { messages, language } = req.body;
   try {
     axios.post('https://api.openai.com/v1/chat/completions', {
