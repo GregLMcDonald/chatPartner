@@ -21,7 +21,12 @@ require('dotenv').config();
 // declare a new express app
 const app = express();
 app.use(bodyParser.json());
+
+// This middleware is what makes the body of the request available as req.body,
+// among other things.
 app.use(awsServerlessExpressMiddleware.eventContext());
+
+// Enable CORS for all methods
 app.use(cors());
 app.options('*', cors());
 
@@ -29,14 +34,13 @@ app.options('*', cors());
 app.post('/text-to-speech', async (req, res) => {
   const { text, language, voiceName } = req.body;
 
-  // const aws_config = {
-  //   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  //   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  //   region: process.env.AWS_REGION,
-  // }
-  // console.log(aws_config);
-  // const polly = new AWS.Polly(aws_config);
-
+  // NOTE: It was important to understand that in the context of a Lambda function,
+  // the execution role of the function is used to determine the permissions of the
+  // function. In this case, the execution role of the function is the role that
+  // was created when the Amplify CLI was used to create the function. This role
+  // has the necessary permissions to call the Polly API. The credential chain is
+  // used to determine the credentials to use when making the API call, so no further
+  // configuration is required.
   const polly = new AWS.Polly();
 
   // Set the options for the synthesis task
@@ -53,7 +57,6 @@ app.post('/text-to-speech', async (req, res) => {
   // Use Polly to synthesize the speech
   polly.synthesizeSpeech(params, (err, data) => {
     if (err) {
-      console.log(err);
       res.status(500).json({ error: 'Error calling Polly API' });
     } else {
       res.send(data);
@@ -65,6 +68,8 @@ const buildSystemContent = (language) => (`You are a conversation partner for a 
 
 app.post('/gpt', async (req, res) => {
   const { messages, language } = req.body || {};
+  // The full arn of the parameter needs to be passed in. The lambda function execution role
+  // has access to parameters with the /amplify/<app-id>/<env>/AMPLIFY_thirdpartyhard_* arn values.
   const { Parameter } = await (new AWS.SSM())
     .getParameter({
       Name: "/amplify/d1hjcq1zhrihu3/prod/AMPLIFY_thirdpartyhard_OPENAI_KEY",
