@@ -15,6 +15,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const awsServerlessExpressMiddleware = require('aws-serverless-express/middleware')
 const cors = require('cors');
+const { Amplify } = require('aws-amplify');
 
 require('dotenv').config();
 
@@ -66,7 +67,7 @@ app.post('/gpt', async (req, res) => {
   const { messages, language } = req.body;
   const { Parameter } = await (new AWS.SSM())
     .getParameter({
-      Name: "OPENAI_KEY",
+      Name: "/amplify/d1hjcq1zhrihu3/prod/AMPLIFY_thirdpartyhard_OPENAI_KEY",
       WithDecryption: true,
     })
     .promise();
