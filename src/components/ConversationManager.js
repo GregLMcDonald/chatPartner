@@ -57,6 +57,7 @@ const ConversationManager = ({
       const myInit = {
         headers: {
           Authorization: `Bearer ${token}`,
+          ContentType: 'application/json',
         },
         body: { messages: cutoffMessages, language },
       };

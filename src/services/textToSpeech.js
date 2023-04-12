@@ -38,6 +38,7 @@ const textToSpeechPolly = async (text, language, voiceName) => {
           Authorization: `Bearer ${(await Auth.currentSession())
             .getIdToken()
             .getJwtToken()}`,
+          ContentType: 'application/json',
         },
         body: { text, language, voiceName },
       };
