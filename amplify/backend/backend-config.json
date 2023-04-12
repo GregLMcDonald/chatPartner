@@ -1,4 +1,20 @@
 {
+  "api": {
+    "thirdpartyhard": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "thirdpartyhard"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
+    }
+  },
   "auth": {
     "germanconvo118e1077": {
       "customAuth": false,
@@ -27,10 +43,44 @@
       "service": "Cognito"
     }
   },
+  "function": {
+    "thirdpartyhard": {
+      "build": true,
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
   "hosting": {
     "S3AndCloudFront": {
       "providerPlugin": "awscloudformation",
       "service": "S3AndCloudFront"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_function_thirdpartyhard_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "thirdpartyhard"
+        }
+      ]
+    },
+    "AMPLIFY_function_thirdpartyhard_openaiKey": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "thirdpartyhard"
+        }
+      ]
+    },
+    "AMPLIFY_function_thirdpartyhard_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "thirdpartyhard"
+        }
+      ]
     }
   }
 }

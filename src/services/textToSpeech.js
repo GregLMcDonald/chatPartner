@@ -31,7 +31,7 @@ const textToSpeechPolly = async (text, language, voiceName) => {
   if (!text) {
     return;
   }
-  const response = await axios.post('http://localhost:3001/api/text-to-speech', { text, language, voiceName });
+  const response = await axios.post('https://5arusik4qa.execute-api.ca-central-1.amazonaws.com/prod/api/text-to-speech', { text, language, voiceName });
   const { AudioStream: { data }, ContentType } = response.data;
 
   const uInt8Array = new Uint8Array(data);

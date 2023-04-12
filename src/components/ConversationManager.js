@@ -51,7 +51,7 @@ const ConversationManager = ({
     const cleanedMessages = messages.filter((message) => message.type === 'utterance').map(({ role, content}) => ({ role, content}));
     const cutoffMessages = cleanedMessages.slice(Math.max(cleanedMessages.length - historyCutoff, 0));
     try {
-      const response = await axios.post('http://localhost:3001/api/gpt', { messages: cutoffMessages, language });
+      const response = await axios.post('https://5arusik4qa.execute-api.ca-central-1.amazonaws.com/prod/api/gpt', { messages: cutoffMessages, language });
       const { role, content } = response.data;
       return { type: 'utterance', role, content, language }
     } catch (error) {

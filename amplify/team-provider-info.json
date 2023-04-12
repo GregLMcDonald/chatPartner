@@ -30,7 +30,8 @@
       "UnauthRoleName": "amplify-germanconvo-prod-210402-unauthRole",
       "StackName": "amplify-germanconvo-prod-210402",
       "StackId": "arn:aws:cloudformation:ca-central-1:775745224945:stack/amplify-germanconvo-prod-210402/ea851940-d8cd-11ed-ae52-022bd1d5c8be",
-      "AmplifyAppId": "d1hjcq1zhrihu3"
+      "AmplifyAppId": "d1hjcq1zhrihu3",
+      "APIGatewayAuthURL": "https://s3.amazonaws.com/amplify-germanconvo-prod-210402-deployment/amplify-cfn-templates/api/APIGatewayAuthStack.json"
     },
     "categories": {
       "auth": {
@@ -38,6 +39,16 @@
       },
       "hosting": {
         "S3AndCloudFront": {}
+      },
+      "function": {
+        "thirdpartyhard": {
+          "deploymentBucketName": "amplify-germanconvo-prod-210402-deployment",
+          "s3Key": "amplify-builds/thirdpartyhard-2b48304331524b464a63-build.zip",
+          "openaiKey": "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"
+        }
+      },
+      "api": {
+        "thirdpartyhard": {}
       }
     }
   }
