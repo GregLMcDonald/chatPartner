@@ -61,19 +61,13 @@ app.post('/text-to-speech', async (req, res) => {
 const buildSystemContent = (language) => (`You are a conversation partner for a user learning ${language}. Always use simple language. Maximum reply length is 10 words.`);
 
 app.post('/gpt', async (req, res) => {
-  console.log('REQ', req);
- // console.log('GPT request:', req.body);
-  console.log({body: req.body});
-  console.log({event: req.event});
   const { messages, language } = req.body || {};
-console.log({ messages, language });
   const { Parameter } = await (new AWS.SSM())
     .getParameter({
       Name: "/amplify/d1hjcq1zhrihu3/prod/AMPLIFY_thirdpartyhard_OPENAI_KEY",
       WithDecryption: true,
     })
     .promise();
-  console.log(Parameter);
   const openaiKey = Parameter.Value;
   const openai_config = {
     headers: {
@@ -81,7 +75,6 @@ console.log({ messages, language });
       'Authorization': `Bearer ${openaiKey}`,
     },
   };
-  console.log(openai_config);
   try {
     axios.post('https://api.openai.com/v1/chat/completions', {
       model: 'gpt-3.5-turbo',
