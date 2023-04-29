@@ -95,7 +95,7 @@ const ConversationManager = ({
         console.log(event);
         let currentTranscript = '';
         for (let i = 0; i < event.results.length; ++i) {
-          const result = event.results[i];
+          const result = event.results[i][0];
           if (result.confidence > 0.0) {
             currentTranscript += result.transcript;
           }
