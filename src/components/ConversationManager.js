@@ -94,19 +94,12 @@ const ConversationManager = ({
       recognitionRef.current.onresult = (event) => {
         console.log(event);
         let currentTranscript = '';
-<<<<<<< HEAD
         for (let i = 0; i < event.results.length; ++i) {
           const result = event.results[i];
           if (result.confidence > 0.0) {
             currentTranscript += result.transcript;
           }
         }
-=======
-        const confidentResults = event.results.filter((result) => result[0].confidence > 0.0);
-        confidentResults.forEach((result) => {
-          currentTranscript += result[0].transcript;
-        });
->>>>>>> f325227f174b09b1565471c993233674e4fea51f
 
         // Update the last conversation message with the current transcript.
         // This is what makes the transcript appear to be continuously updated.
