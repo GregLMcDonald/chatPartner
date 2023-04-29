@@ -92,6 +92,7 @@ const ConversationManager = ({
       recognitionRef.current.lang = language;
 
       recognitionRef.current.onresult = (event) => {
+        console.log(event);
         let currentTranscript = '';
         for (let i = 0; i < event.results.length; ++i) {
           currentTranscript += event.results[i][0].transcript;
