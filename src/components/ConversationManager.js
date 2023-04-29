@@ -95,7 +95,10 @@ const ConversationManager = ({
         console.log(event);
         let currentTranscript = '';
         for (let i = 0; i < event.results.length; ++i) {
-          currentTranscript += event.results[i][0].transcript;
+          const result = event.results[i];
+          if (result.confidence > 0.0) {
+            currentTranscript += result.transcript;
+          }
         }
 
         // Update the last conversation message with the current transcript.
