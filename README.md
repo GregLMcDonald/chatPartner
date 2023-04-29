@@ -9,14 +9,19 @@ AWS_ACCESS_KEY_ID=
 AWS_SECRET_ACCESS_KEY=
 AWS_REGION=
 
+## Dev and Debug on Android
+Just start up the app with `npm start`. It is configured to use the Amplify-deployed resources for auth and the thirdparthard API (mine) even in dev. Should figure out how to debug the backend locally.
+
+To debug the app on Android, I turned on USB debugging, visited chrome:://inspect#devices in Chrome on my desktop and saw it the list of things I could inspect. The short USB cable and the mac adapter worked as a combo. I tried debugging over wifi but couldn't get it to work.
+
+The SpeechRecognition API will only work over a secure connection, so I use `ngrok http 3000` for ingress to the local app. I had to sign up for a free ngrok account and follow the procedure to install my authtoken with `ngrok config add-authtoken <the token>`.
+
+When I'd added the permission requester (getUserMedia) things started working briefly and then stop. I rebooted
+my phone and that fixed it. Turns out hard-closing Chrome and restarting is probably enough.
+
 ## Available Scripts
 
 In the project directory, you can run:
-
-### `npm run start:server`
-
-Runs the Express server. The React app uses this server to make it's requests to OpenAI. Only the server knows the API key secret.
-
 ### `npm start`
 
 Runs the app in the development mode.\
