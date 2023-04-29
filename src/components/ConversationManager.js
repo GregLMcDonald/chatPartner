@@ -94,11 +94,24 @@ const ConversationManager = ({
       recognitionRef.current.onresult = (event) => {
         console.log(event);
         let currentTranscript = '';
+        let resultsUseConfidence = false;
         for (let i = 0; i < event.results.length; ++i) {
           const result = event.results[i][0];
           if (result.confidence > 0.0) {
-            currentTranscript += result.transcript;
+            resultsUseConfidence = true;
+            break
           }
+        }
+        if (resultsUseConfidence) {
+          for (let i = 0; i < event.results.length; ++i) {
+            const result = event.results[i][0];
+            if (result.confidence > 0.0) {
+              currentTranscript += result.transcript;
+            }
+          }
+        } else {
+          const result = event.results[event.results.length - 1][0];
+          currentTranscript += result.transcript;
         }
 
         // Update the last conversation message with the current transcript.
