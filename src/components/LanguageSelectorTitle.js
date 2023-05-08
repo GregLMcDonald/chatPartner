@@ -1,24 +1,34 @@
 import React from "react";
+import Select from "react-select";
+import styles from "../styles/select";
 
 const LanguageSelectorTitle = ({
   options = [],
   language,
   onChange = () => {}
-}) => (
-  <h1 className="text-center text-4xl font-bold mb-4 mt-8">
-    Let's chat in{' '}
-    <select
-      value={language}
-      onChange={onChange}
-      className="text-4xl font-bold bg-transparent focus:outline-none"
-    >
-      {options.map((option) => (
-        <option key={option.value} value={option.value}>
-          {option.label}
-        </option>
-      ))}
-    </select>
-  </h1>
-);
+}) => {
+
+
+  const handleChange = (selectedOption) => {
+    onChange(selectedOption.value);
+  };
+
+  const selectedOption = options.find((option) => option.value === language);
+
+  return (
+    <div className="absolute top-2 left-4">
+      <Select
+        value={selectedOption}
+        onChange={handleChange}
+        options={options}
+        styles={styles}
+        isSearchable={false}
+        components={{
+          IndicatorSeparator: null
+        }}
+      />
+    </div>
+  );
+};
 
 export default LanguageSelectorTitle;

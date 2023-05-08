@@ -1,8 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Conversation from './Conversation';
 // import axios from 'axios';
-import { RecordButton, StopButton } from './Buttons';
-import RecordingIndicator from './RecordingIndicator';
 import textToSpeech from '../services/textToSpeech';
 import { Auth, API } from 'aws-amplify';
 
@@ -13,8 +11,9 @@ const ConversationManager = ({
   voiceName,
   historyCutoff = DEFAULT_CUTOFF,
   usePolly = false,
+  isRecording,
+  setIsRecording,
 }) => {
-  const [isRecording, setIsRecording] = useState(false);
   const [conversation, setConversation] = useState([]);
   const [isResponding, setIsResponding] = useState(false);
 
@@ -80,7 +79,7 @@ const ConversationManager = ({
       const { role, content } = response;
       return { type: 'utterance', role, content, language }
     } catch (error) {
-      return { type: 'error', text: 'Oops.', language }
+      return { type: 'error', content:  'Oops.', language }
     }
   };
 
@@ -158,26 +157,13 @@ const ConversationManager = ({
     }
   };
 
-  const startRecording = () => {
-    setIsRecording(true);
-  };
-
-  const stopRecording = () => {
-    setIsRecording(false);
-  };
-
   const clearConversation = () => {
     setConversation([]);
   };
 
   return (
-    <div className="mb-8">
-      <RecordingIndicator isRecording={isRecording} />
-      <div className="mb-4 flex flex-row items-center justify-center sticky top-8 z-10">
-        <RecordButton isRecording={isRecording} startRecording={startRecording} />
-        <StopButton isRecording={isRecording} stopRecording={stopRecording} />
-      </div>
-      <Conversation conversation={conversation} clearConversation={clearConversation} historyCutoff={historyCutoff} loading={isResponding} />
+    <div className="mb-6 flex-grow flex flex-col overflow-auto">
+      <Conversation conversation={conversation}  clearConversation={clearConversation} historyCutoff={historyCutoff} loading={isResponding} />
     </div>
   );
 };

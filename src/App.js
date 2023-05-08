@@ -2,8 +2,10 @@ import React, { useEffect, useState} from 'react';
 import './custom.css';
 import ConversationManager from './components/ConversationManager';
 import LanguageSelectorTitle from './components/LanguageSelectorTitle';
-import VoiceSelectorHeading from './components/VoiceSelectorHeading';
+import FloatingRecordButton from './components/FloatingRecordButton';
 import { withAuthenticator } from '@aws-amplify/ui-react';
+import Select from 'react-select';
+import styles from './styles/select';
 import '@aws-amplify/ui-react/styles.css';
 
 
@@ -30,21 +32,14 @@ function App({ signOut, user }) {
   const [availableVoices, setAvailableVoices] = useState([]);
   const [voiceName, setVoiceName] = useState('');
   const [usePolly, setUsePolly] = useState(true);
+  const [isRecording, setIsRecording] = useState(false);
 
-  const handleLanguageChange = (event) => {
-    setLanguage(event.target.value);
+  const handleTextToSpeechSelectionChange = (option) => {
+    setUsePolly(option.value === 'polly');
   };
 
-  const handleVoiceChange = (event) => {
-    setVoiceName(event.target.value);
-  };
-
-  const handleTextToSpeechSelectionChange = (event) => {
-    setUsePolly(event.target.value === 'polly');
-  };
-
-  const handlePollyVoiceChange = (event) => {
-    setVoiceName(event.target.value);
+  const handlePollyVoiceChange = (option) => {
+    setVoiceName(option.value);
   };
 
   const handleVoicesChanged = () => {
@@ -73,22 +68,54 @@ function App({ signOut, user }) {
     }
   }, []);
 
+  const handleClick = () => {
+    setIsRecording(!isRecording);
+  };
+
+  const voiceOptions = [
+    { value: 'polly', label: 'Polly' },
+    { value: 'browser', label: 'Browser' },
+  ];
+  const selectedVoiceOption = usePolly ? voiceOptions[0] : voiceOptions[1];
+
+  const pollyOptions = POLLY_VOICES[language].map((voice) => ({ value: voice, label: voice }));
+  const selectedPollyOption = pollyOptions.find((option) => option.value === voiceName);
+
+
   return (
-    <div className="App min-h-screen py-4 px-8 bg-gray-100 flex flex-col items-center justify-flex-start">
-      <div>
-        <button className="absolute top-2 right-4 text-red-500 font-semibold hover:text-red-600 py-2 px-4 rounded-lg shadow-none" onClick={signOut}>Sign out</button>
-        <LanguageSelectorTitle options={LANGUAGE_OPTIONS} language={language} onChange={handleLanguageChange} />
-        {false && <VoiceSelectorHeading options={availableVoices[language]} voiceName={voiceName} onChange={handleVoiceChange} /> }
-        <ConversationManager language={language} voiceName={voiceName} usePolly={usePolly} />
-        <div className="flex flex-row justify-center items-start">
-          <select value={usePolly ? 'polly' : 'browser'} className="w-half border-gray-300 border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" onChange={handleTextToSpeechSelectionChange}>
-            <option value="browser">Browser</option>
-            <option value="polly">Amazon Polly</option>
-          </select>
-          <select value={voiceName} className="w-half border-gray-300 border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" onChange={handlePollyVoiceChange}>
-            {POLLY_VOICES[language].map((voice) => <option key={voice} value={voice}>{voice}</option>)}
-          </select>
-        </div>
+    <div className="App min-h-screen max-h-screen p-4 bg-gray-100 flex flex-col items-center justify-flex-start">
+      <button className="absolute top-3 right-4 text-red-500 font-semibold hover:text-red-600 rounded-lg shadow-none" onClick={signOut}>Sign out</button>
+      <LanguageSelectorTitle options={LANGUAGE_OPTIONS} language={language} onChange={setLanguage} />
+      <ConversationManager language={language} voiceName={voiceName} usePolly={usePolly} isRecording={isRecording} setIsRecording={setIsRecording} />
+      <div className="flex gap-1 flex-row justify-start items-start" style={{ width: '100%' }}>
+        <Select
+          value={selectedVoiceOption}
+          onChange={handleTextToSpeechSelectionChange}
+          options={voiceOptions}
+          styles={styles}
+          isSearchable={false}
+          menuPortalTarget={document.body}
+          menuPosition={'fixed'}
+          components={{
+            IndicatorSeparator: null
+          }}
+        />
+        <Select
+          value={selectedPollyOption}
+          onChange={handlePollyVoiceChange}
+          options={pollyOptions}
+          styles={styles}
+          isSearchable={false}
+          menuPortalTarget={document.body}
+          menuPosition={'fixed'}
+          components={{
+            IndicatorSeparator: null
+          }}
+        />
+        <FloatingRecordButton
+          onClick={handleClick}
+          isRecording={isRecording}
+        />
       </div>
     </div>
   );
