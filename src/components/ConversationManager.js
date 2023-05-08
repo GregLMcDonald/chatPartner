@@ -129,7 +129,7 @@ const ConversationManager = ({
 
       recognitionRef.current.onend = () => {
         if (isRecordingRef.current) {
-          startSpeechRecognition();
+          recognitionRef.current.start();
         } else {
           setIsResponding(true);
           callGPTAPI(conversationRef.current).then((response) => {
