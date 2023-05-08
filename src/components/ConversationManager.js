@@ -19,6 +19,7 @@ const ConversationManager = ({
   const [isResponding, setIsResponding] = useState(false);
 
   const conversationRef = useRef(conversation);
+  const isRecordingRef = useRef(isRecording);
   const recognitionRef = useRef(null);
 
   const handleKeyDown = (event) => {
@@ -92,7 +93,6 @@ const ConversationManager = ({
       recognitionRef.current.lang = language;
 
       recognitionRef.current.onresult = (event) => {
-        console.log(event);
         let currentTranscript = '';
         let resultsUseConfidence = false;
         for (let i = 0; i < event.results.length; ++i) {
@@ -128,17 +128,21 @@ const ConversationManager = ({
       };
 
       recognitionRef.current.onend = () => {
-        setIsResponding(true);
-        callGPTAPI(conversationRef.current).then((response) => {
-          setIsResponding(false);
-          const { type, content } = response;
-          if (type !== 'error') {
-            textToSpeech(content, language, voiceName, usePolly);
-          }
-          setConversation((prevConversation) => {
-            return [...prevConversation, response];
+        if (isRecordingRef.current) {
+          startSpeechRecognition();
+        } else {
+          setIsResponding(true);
+          callGPTAPI(conversationRef.current).then((response) => {
+            setIsResponding(false);
+            const { type, content } = response;
+            if (type !== 'error') {
+              textToSpeech(content, language, voiceName, usePolly);
+            }
+            setConversation((prevConversation) => {
+              return [...prevConversation, response];
+            });
           });
-        });
+        }
       };
 
       recognitionRef.current.start();

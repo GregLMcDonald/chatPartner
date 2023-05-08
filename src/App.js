@@ -26,7 +26,7 @@ const getGoogleVoice = (voices) => {
 };
 
 function App({ signOut, user }) {
-  const [language, setLanguage] = useState('de-DE');
+  const [language, setLanguage] = useState('en-US');
   const [availableVoices, setAvailableVoices] = useState([]);
   const [voiceName, setVoiceName] = useState('');
   const [usePolly, setUsePolly] = useState(true);
