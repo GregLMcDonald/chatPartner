@@ -13,12 +13,12 @@ const ConversationManager = ({
   usePolly = false,
   isRecording,
   setIsRecording,
+  isRecordingRef,
 }) => {
   const [conversation, setConversation] = useState([]);
   const [isResponding, setIsResponding] = useState(false);
 
   const conversationRef = useRef(conversation);
-  const isRecordingRef = useRef(isRecording);
   const recognitionRef = useRef(null);
 
   const handleKeyDown = (event) => {

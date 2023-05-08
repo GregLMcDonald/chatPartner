@@ -1,4 +1,4 @@
-import React, { useEffect, useState} from 'react';
+import React, { useEffect, useRef, useState} from 'react';
 import './custom.css';
 import ConversationManager from './components/ConversationManager';
 import LanguageSelectorTitle from './components/LanguageSelectorTitle';
@@ -33,6 +33,7 @@ function App({ signOut, user }) {
   const [voiceName, setVoiceName] = useState('');
   const [usePolly, setUsePolly] = useState(true);
   const [isRecording, setIsRecording] = useState(false);
+  const isRecordingRef = useRef(isRecording);
 
   const handleTextToSpeechSelectionChange = (option) => {
     setUsePolly(option.value === 'polly');
@@ -86,7 +87,14 @@ function App({ signOut, user }) {
     <div className="App min-h-screen max-h-screen p-4 bg-gray-100 flex flex-col items-center justify-flex-start">
       <button className="absolute top-3 right-4 text-red-500 font-semibold hover:text-red-600 rounded-lg shadow-none" onClick={signOut}>Sign out</button>
       <LanguageSelectorTitle options={LANGUAGE_OPTIONS} language={language} onChange={setLanguage} />
-      <ConversationManager language={language} voiceName={voiceName} usePolly={usePolly} isRecording={isRecording} setIsRecording={setIsRecording} />
+      <ConversationManager
+        language={language}
+        voiceName={voiceName}
+        usePolly={usePolly}
+        isRecording={isRecording}
+        setIsRecording={setIsRecording}
+        isRecordingRef={isRecordingRef}
+      />
       <div className="flex gap-1 flex-row justify-start items-start" style={{ width: '100%' }}>
         <Select
           value={selectedVoiceOption}
